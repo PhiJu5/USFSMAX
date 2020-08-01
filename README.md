@@ -10,6 +10,8 @@ Changes I made to Greg's version:
 
 * Eliminated globals and #defines
 
+* Provided a simple API to basic functionality (scaled sensor readings)
+
 * Moved all printout from library code to sketch
 
 * Simplified arrays; e.g., ```gyroData[2][3]``` => ```gyroData[3]```

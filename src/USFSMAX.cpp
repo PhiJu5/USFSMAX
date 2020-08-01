@@ -170,6 +170,27 @@ bool USFSMAX::quaternionReady(void)
     return (bool)(getDataReadyStatus() & 0x10);
 }
 
+void USFSMAX::readGyroAcc(float gyro[3], float acc[3])
+{
+}
+
+void USFSMAX::readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro)
+{
+}
+
+void USFSMAX::readMagBaro(float mag[3], float & baro)
+{
+}
+
+void USFSMAX::readMag(float mag[3])
+{
+}
+
+void USFSMAX::readBaro(float & baro)
+{
+}
+
+
 // ------------------------------------------------------------------------------------------
 
 void USFSMAX::readSensorCalibrations(void)

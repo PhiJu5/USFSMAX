@@ -144,11 +144,21 @@ class USFSMAX
                 const bool enableDHICorrector=true, const bool use2DDHICorrector=false,
                 const bool eulerQuatFlag=false, const bool scaledSensorDataFlag=true);
 
-        uint8_t     begin(uint8_t bus=1);
+        uint8_t begin(uint8_t bus=1);
 
         DataReady_t dataReadyFlags(void);
 
-        bool        quaternionReady(void);
+        bool quaternionReady(void);
+
+        void readGyroAcc(float gyro[3], float acc[3]);
+
+        void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro);
+
+        void readMagBaro(float mag[3], float & baro);
+
+        void readMag(float mag[3]);
+
+        void readBaro(float & baro);
 
         // -------------------------------------------------------------------------
 
