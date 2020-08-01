@@ -172,6 +172,10 @@ bool USFSMAX::quaternionReady(void)
 
 void USFSMAX::readGyroAcc(float gyro[3], float acc[3])
 {
+    int16_t  gyroADC[3] = {};
+    int16_t  accADC[3] = {};
+
+    getGyroAccelADC(gyroADC, accADC);
 }
 
 void USFSMAX::readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro)

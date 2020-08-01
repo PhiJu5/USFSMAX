@@ -217,9 +217,9 @@ static void computeAnglesFromQuat(float quat[4], float angle[2], float & heading
 static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[3], 
         float quat[4], float angle[2], float & heading, int32_t & baroADC)
 {
-    int16_t  gyroADC[3];
-    int16_t  accADC[3];
-    int16_t  magADC[3];
+    int16_t  gyroADC[3] = {};
+    int16_t  accADC[3] = {};
+    int16_t  magADC[3] = {};
 
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReadyFlags()) {
