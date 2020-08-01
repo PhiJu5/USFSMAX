@@ -1,4 +1,6 @@
-This is a fork of Greg Tomasch's [code](https://github.com/gregtomasch/USFSMAX) for the
+<a href="https://www.tindie.com/products/onehorse/max32660-motion-co-processor/"><img src="extras/media/usfsmax.jpg"></a>
+
+This repository derives from Greg Tomasch's [code](https://github.com/gregtomasch/USFSMAX) for the
 [USFSMAX motion coprocessor](https://www.tindie.com/products/onehorse/max32660-motion-co-processor/).  
 See Greg's library for details.
 
