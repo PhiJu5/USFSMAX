@@ -36,17 +36,17 @@ class USFSMAX_Basic
     public:
 
         USFSMAX_Basic(
-                USFSMAX::AccelGyroODR_t accelODR, 
-                USFSMAX::AccelGyroODR_t gyroODR, 
-                USFSMAX::MagODR_t magODR, 
-                USFSMAX::BaroODR_t baroODR, 
-                USFSMAX::QuatDiv_t quatDiv,
-                USFSMAX::LSM6DSMGyroLPF_t lsm6dsmGyroLPF, 
-                USFSMAX::LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
-                USFSMAX::AccScale_t accScale, 
-                USFSMAX::GyroScale_t gyroScale,
-                USFSMAX::LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, 
-                USFSMAX::LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
+                const USFSMAX::AccelGyroODR_t accelODR, 
+                const USFSMAX::AccelGyroODR_t gyroODR, 
+                const USFSMAX::MagODR_t magODR, 
+                const USFSMAX::BaroODR_t baroODR, 
+                const USFSMAX::QuatDiv_t quatDiv,
+                const USFSMAX::LSM6DSMGyroLPF_t lsm6dsmGyroLPF, 
+                const USFSMAX::LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
+                const USFSMAX::AccScale_t accScale, 
+                const USFSMAX::GyroScale_t gyroScale,
+                const USFSMAX::LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, 
+                const USFSMAX::LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
                 const float magV, 
                 const float magH, 
                 const float magDec);
@@ -69,5 +69,5 @@ class USFSMAX_Basic
 
     private:
 
-        USFSMAX _usfsmax;
+        //USFSMAX _usfsmax;
 }; 

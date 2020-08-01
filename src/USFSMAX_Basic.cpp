@@ -31,33 +31,51 @@
 #include "Arduino.h"
 #include "USFSMAX_Basic.h"
 
-uint8_t begin(uint8_t bus=1)
+USFSMAX_Basic::USFSMAX_Basic(
+        const USFSMAX::AccelGyroODR_t accelODR, 
+        const USFSMAX::AccelGyroODR_t gyroODR, 
+        const USFSMAX::MagODR_t magODR, 
+        const USFSMAX::BaroODR_t baroODR, 
+        const USFSMAX::QuatDiv_t quatDiv,
+        const USFSMAX::LSM6DSMGyroLPF_t lsm6dsmGyroLPF, 
+        const USFSMAX::LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
+        const USFSMAX::AccScale_t accScale, 
+        const USFSMAX::GyroScale_t gyroScale,
+        const USFSMAX::LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, 
+        const USFSMAX::LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
+        const float magV, 
+        const float magH, 
+        const float magDec)
 {
 }
 
-USFSMAX::DataReady_t dataReadyFlags(void)
+uint8_t USFSMAX_Basic::begin(uint8_t bus)
 {
 }
 
-bool quaternionReady(void) {
-}
-
-void readGyroAcc(float gyro[3], float acc[3])
+USFSMAX::DataReady_t USFSMAX_Basic::dataReadyFlags(void)
 {
 }
 
-void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro)
+bool USFSMAX_Basic::quaternionReady(void) {
+}
+
+void USFSMAX_Basic::readGyroAcc(float gyro[3], float acc[3])
 {
 }
 
-void readMagBaro(float mag[3], float & baro)
+void USFSMAX_Basic::readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro)
 {
 }
 
-void readMag(float mag[3])
+void USFSMAX_Basic::readMagBaro(float mag[3], float & baro)
 {
 }
 
-void readBaro(float & baro)
+void USFSMAX_Basic::readMag(float mag[3])
+{
+}
+
+void USFSMAX_Basic::readBaro(float & baro)
 {
 }
