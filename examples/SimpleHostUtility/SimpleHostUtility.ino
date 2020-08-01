@@ -37,6 +37,11 @@
 #include "USFSMAX.h"
 #include "SensorCal.h"
 
+// Un-comment one
+//static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
+//static uint32_t INTERRUPT_PIN = 32; // TinyPICO
+static uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
+
 // Magnetic constants for Kelseyville, CA
 // For your location, use https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
 static const float MAG_V           = 42.9631f; // angle, degrees
@@ -95,7 +100,6 @@ USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
 USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 
 // Pin definitions
-static uint32_t INTERRUPT_PIN = 32;
 static uint32_t LED_PIN       = 13;
 
 // Helpful constants
