@@ -1,6 +1,6 @@
 <a href="https://www.tindie.com/products/onehorse/max32660-motion-co-processor/"><img src="extras/media/usfsmax.jpg" width=500></a>
 
-This repository derives from Greg Tomasch's [code](https://github.com/gregtomasch/USFSMAX) for the
+This repository derives from Greg Tomasch's [code](https://github.com/gregtomasch/USFSMAX) for the Pesky Products
 [USFSMAX motion coprocessor](https://www.tindie.com/products/onehorse/max32660-motion-co-processor/).  
 See Greg's library for details.
 
