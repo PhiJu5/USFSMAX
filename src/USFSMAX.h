@@ -156,8 +156,8 @@ class USFSMAX
         {
             float V[3];          // Offset vector components in physical units
             float invW[3][3];    // Inverse calibration matrix
-            uint8_t calGood;    // Byte to verify valid cal is in EEPROM
-        } fullAdvCal_t;        // IMU conversion factors
+            uint8_t calGood;     // Byte to verify valid cal is in EEPROM
+        } fullAdvCal_t;          // IMU conversion factors
 
         float gPerCount;
         float dpsPerCount;
@@ -172,6 +172,7 @@ class USFSMAX
         float Mx, My;  // Tilt-corrected horizontal magnetic components
 
         uint8_t getCalibrationStatus(void);
+
         void    getBaroADC(int32_t & baroADC);
         void    getGyroAccelADC(int16_t  gyroADC[3], int16_t accADC[3]);
         void    getGyroAccelMagBaroADC(int16_t  gyroADC[3], int16_t accADC[3], int16_t magADC[3], int32_t & baroADC);
@@ -179,17 +180,24 @@ class USFSMAX
         void    getAccADC(int16_t accADC[3]);
         void    getMagADC(int16_t magADC[3]);
         void    getMagBaroADC(int16_t magADC[3], int32_t & baroADC);
+        void    getLinAccADC();
+
         void    getMxMy(const float utPerCount);
+
         void    getQuat(float quat[4]);
         void    getQuatLin(float quat[4]);
-        void    getLinAccADC();
+
         void    getDHIRsq();
+
         void    readSensorCalibrations(void);
+
         void    resetDHI();
+
         void    retrieveFullAccelCal();
         void    retrieveEllipMagCal();
         void    retrieveFinalMagCal();
         void    retrieveFullGyroCal();
+
         void    sendGyroCalibrationRequest(void);
 
     private:

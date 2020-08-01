@@ -26,7 +26,11 @@
  * WITH THE SOFTWARE.
  */
 
+#ifdef __MK20DX256__
+#include <i2c_t3.h>
+#else
 #include <Wire.h>
+#endif
 
 #include "Alarms.h"
 #include "IMU.h"
@@ -240,6 +244,8 @@ static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[
             usfsmax.getBaroADC(baroADC);
             Serial.println("baro");
             break;
+        default:
+            break;
     };
 
     if (usfsmax.quaternionReady()) {
@@ -403,7 +409,7 @@ static void error(uint8_t status)
     }
 }
 
-static void reportCurrentData(float accData[2], float gyroData[3], float magData[3], 
+static void reportCurrentData(float accData[3], float gyroData[3], float magData[3], 
         int32_t baroADC, float quat[4], float angle[2], float heading)
 {
     Serial.print("ax = ");
@@ -484,7 +490,7 @@ void setup()
 {
     // Open serial port
     Serial.begin(115200);
-    delay(4000);
+    delay(2000);
 
     // Set up DRDY interrupt pin
     pinMode(INTERRUPT_PIN, INPUT);
@@ -493,10 +499,15 @@ void setup()
     alarms.begin();
     alarms.blueLEDoff();
 
-    // Initialize usfsmax I2C bus
+    // Initialize I^2C bus, setting I2C clock speed to 100kHz
+#ifdef __MK20DX256__
+    Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_EXT, I2C_RATE_100);
+#else
     Wire.begin();
     delay(100);
-    Wire.setClock(100000); // Set I2C clock speed to 100kHz cor configuration
+    Wire.setClock(100000); 
+#endif
+
     delay(2000);
 
     uint8_t status = usfsmax.begin(); // Start USFSMAX
@@ -543,12 +554,11 @@ void loop()
 {
     int32_t  baroADC;
 
-    static uint32_t previousTime;
     static uint32_t lastRefresh;
 
-    float gyroData[3];
-    float accData[3];
-    float magData[3];
+    float gyroData[3] = {};
+    float accData[3] = {};
+    float magData[3] = {};
 
     float quat[4];
 

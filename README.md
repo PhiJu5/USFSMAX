@@ -16,3 +16,7 @@ Changes I made to Greg's version:
 
 * Use [CrossPlatformDataBus](https://github.com/simondlevy/CrossPlatformDataBus) to support multiple host types
 (Arduino, RaspberryPi, NVIDIA Jetson); work in progress
+
+I have tested this library on the following hosts:
+
+* TinyPICO ESP32
