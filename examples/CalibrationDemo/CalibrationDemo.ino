@@ -128,13 +128,24 @@ static Alarms alarms(LED_PIN);
 
 static USFSMAX    
 usfsmax(
-        ACCEL_ODR, GYRO_ODR, MAG_ODR, BARO_ODR, QUAT_DIV,
-        MAG_V, MAG_H, MAG_DECLINATION,
-        LSM6DSM_GYRO_LPF, LSM6DSM_ACC_LPF_ODR, 
-        ACC_SCALE, GYRO_SCALE,
-        LIS2MDL_MAG_LPF_ODR, LPS22HB_BARO_LPF,
-        ENABLE_DHI_CORRECTOR, USE_2D_DHI_CORRECTOR, 
-        EULER_QUAT_FLAG, SCALED_SENSOR_DATA_FLAG);
+        ACCEL_ODR,
+        GYRO_ODR,
+        MAG_ODR,
+        BARO_ODR,
+        QUAT_DIV,
+        LSM6DSM_GYRO_LPF,
+        LSM6DSM_ACC_LPF_ODR,
+        ACC_SCALE,
+        GYRO_SCALE,
+        LIS2MDL_MAG_LPF_ODR,
+        LPS22HB_BARO_LPF,
+        MAG_V,
+        MAG_H,
+        MAG_DECLINATION,
+        ENABLE_DHI_CORRECTOR,
+        USE_2D_DHI_CORRECTOR,
+        EULER_QUAT_FLAG,
+        SCALED_SENSOR_DATA_FLAG);
 
 static IMU imu;
 

@@ -136,13 +136,24 @@ class USFSMAX
 
         }  DataReady_t;
 
-        USFSMAX(AccelGyroODR_t accelODR, AccelGyroODR_t gyroODR, MagODR_t magODR, BaroODR_t baroODR, QuatDiv_t quatDiv,
-                const float magV, const float magH, const float magDec,
-                LSM6DSMGyroLPF_t lsm6dsmGyroLPF, LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
-                AccScale_t accScale, GyroScale_t gyroScale,
-                LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
-                const bool enableDHICorrector=true, const bool use2DDHICorrector=false,
-                const bool eulerQuatFlag=false, const bool scaledSensorDataFlag=true);
+        USFSMAX(const AccelGyroODR_t accelODR, 
+                const AccelGyroODR_t gyroODR,
+                const MagODR_t magODR,
+                const BaroODR_t baroODR,
+                const QuatDiv_t quatDiv,
+                const LSM6DSMGyroLPF_t lsm6dsmGyroLPF,
+                const LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
+                const AccScale_t accScale,
+                const GyroScale_t gyroScale,
+                const LIS2MDLMagLpfODR_t lis2mdlMagLpfODR,
+                const LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
+                const float magV,
+                const float magH,
+                const float magDec,
+                const bool enableDHICorrector=true,
+                const bool use2DDHICorrector=false,
+                const bool eulerQuatFlag=false,
+                const bool scaledSensorDataFlag=true);
 
         uint8_t begin(uint8_t bus=1);
 

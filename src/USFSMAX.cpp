@@ -31,13 +31,24 @@
 #include <CrossPlatformI2C_Core.h>
 
 USFSMAX::USFSMAX(
-        AccelGyroODR_t accelODR, AccelGyroODR_t gyroODR, MagODR_t magODR, BaroODR_t baroODR, QuatDiv_t quatDiv,
-        const float magV, const float magH, const float magDec,
-        LSM6DSMGyroLPF_t lsm6dsmGyroLPF, LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
-        AccScale_t accScale, GyroScale_t gyroScale,
-        LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
-        const bool enableDHICorrector, const bool use2DDHICorrector, 
-        const bool eulerQuatFlag, const bool scaledSensorDataFlag)
+        const AccelGyroODR_t accelODR,
+        const AccelGyroODR_t gyroODR,
+        const MagODR_t magODR,
+        const BaroODR_t baroODR,
+        const QuatDiv_t quatDiv,
+        const LSM6DSMGyroLPF_t lsm6dsmGyroLPF,
+        const LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
+        const AccScale_t accScale,
+        const GyroScale_t gyroScale,
+        const LIS2MDLMagLpfODR_t lis2mdlMagLpfODR,
+        const LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
+        const float magV,
+        const float magH,
+        const float magDec,
+        const bool enableDHICorrector,
+        const bool use2DDHICorrector,
+        const bool eulerQuatFlag,
+        const bool scaledSensorDataFlag)
 {
     _accelODR = accelODR;
     _gyroODR  = gyroODR;
@@ -90,7 +101,7 @@ USFSMAX::USFSMAX(
 
 uint8_t USFSMAX::begin(uint8_t bus)
 {
-   _i2c = cpi2c_open(MAX32660_ADDR, bus);
+    _i2c = cpi2c_open(MAX32660_ADDR, bus);
 
     uint8_t status = readRegister(FUSION_STATUS);     // Read the coprocessor's current fusion status
 
@@ -397,7 +408,7 @@ void USFSMAX::getDHIRsq()
 
 void USFSMAX::resetDHI()
 {
-   writeRegister(CALIBRATION_REQUEST, _use2DDHICorrector ? 0x70 : 0x30);
+    writeRegister(CALIBRATION_REQUEST, _use2DDHICorrector ? 0x70 : 0x30);
 }
 
 void USFSMAX::retrieveConfig()
@@ -483,7 +494,7 @@ uint8_t USFSMAX::getDataReadyStatus(void)
 
 void USFSMAX::sendGyroCalibrationRequest(void)
 {
-  writeRegister(CALIBRATION_REQUEST, 0x01);
+    writeRegister(CALIBRATION_REQUEST, 0x01);
 }
 
 // General I^2C ----------------------------------------------------------------

@@ -28,46 +28,36 @@
 
 #pragma once
 
-#include "USFSMAX.h"
+#include "Arduino.h"
+#include "USFSMAX_Basic.h"
 
-class USFSMAX_Basic
+uint8_t begin(uint8_t bus=1)
 {
+}
 
-    public:
+USFSMAX::DataReady_t dataReadyFlags(void)
+{
+}
 
-        USFSMAX_Basic(
-                USFSMAX::AccelGyroODR_t accelODR, 
-                USFSMAX::AccelGyroODR_t gyroODR, 
-                USFSMAX::MagODR_t magODR, 
-                USFSMAX::BaroODR_t baroODR, 
-                USFSMAX::QuatDiv_t quatDiv,
-                USFSMAX::LSM6DSMGyroLPF_t lsm6dsmGyroLPF, 
-                USFSMAX::LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
-                USFSMAX::AccScale_t accScale, 
-                USFSMAX::GyroScale_t gyroScale,
-                USFSMAX::LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, 
-                USFSMAX::LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
-                const float magV, 
-                const float magH, 
-                const float magDec);
+bool quaternionReady(void) {
+}
 
-        uint8_t begin(uint8_t bus=1);
+void readGyroAcc(float gyro[3], float acc[3])
+{
+}
 
-        USFSMAX::DataReady_t dataReadyFlags(void);
+void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro)
+{
+}
 
-        bool quaternionReady(void);
+void readMagBaro(float mag[3], float & baro)
+{
+}
 
-        void readGyroAcc(float gyro[3], float acc[3]);
+void readMag(float mag[3])
+{
+}
 
-        void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro);
-
-        void readMagBaro(float mag[3], float & baro);
-
-        void readMag(float mag[3]);
-
-        void readBaro(float & baro);
-
-    private:
-
-        USFSMAX _usfsmax;
-}; 
+void readBaro(float & baro)
+{
+}
