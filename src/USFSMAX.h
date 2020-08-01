@@ -150,16 +150,6 @@ class USFSMAX
 
         bool        quaternionReady(void);
 
-        void readMagnetometer(float & mx, float & my, float & mz);
-
-        void readAccelerometer(float & ax, float & ay, float & az);
-
-        void readGyrometer(float & gx, float & gy, float & gz);
-
-        void readQuaternion(float & qw, float & qx, float & qy, float & qz);
-
-        void readBarometer(float & pressure, float & temperature);
-
         // -------------------------------------------------------------------------
 
         typedef struct

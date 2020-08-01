@@ -170,26 +170,6 @@ bool USFSMAX::quaternionReady(void)
     return (bool)(getDataReadyStatus() & 0x10);
 }
 
-void readMagnetometer(float & mx, float & my, float & mz)
-{
-}
-
-void readAccelerometer(float & ax, float & ay, float & az)
-{
-}
-
-void readGyrometer(float & gx, float & gy, float & gz)
-{
-}
-
-void readQuaternion(float & qw, float & qx, float & qy, float & qz)
-{
-}
-
-void readBarometer(float & pressure, float & temperature)
-{
-}
-
 // ------------------------------------------------------------------------------------------
 
 void USFSMAX::readSensorCalibrations(void)

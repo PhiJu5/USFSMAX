@@ -238,6 +238,7 @@ static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[
             break;
         case USFSMAX::DATA_READY_BARO:
             usfsmax.getBaroADC(baroADC);
+            Serial.println("baro");
             break;
     };
 
@@ -595,8 +596,7 @@ void loop()
         }
 
         // Toggle LED if not calibrating gyroscopes
-        if (sensorCal.gyroCalActive[0])
-        {
+        if (sensorCal.gyroCalActive[0]) {
             alarms.blueLEDoff();
             if ((usfsmax.getCalibrationStatus() & 0x01) == 0) {
                 sensorCal.gyroCalActive[0] = false;
@@ -610,5 +610,3 @@ void loop()
     delay(5);
 
 } // loop
-
-
