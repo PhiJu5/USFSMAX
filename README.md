@@ -20,3 +20,5 @@ Changes I made to Greg's version:
 I have tested this library on the following hosts:
 
 * TinyPICO ESP32
+
+* Teensy4.0

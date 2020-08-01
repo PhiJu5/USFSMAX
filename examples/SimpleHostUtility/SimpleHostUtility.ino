@@ -66,9 +66,7 @@ static bool SERIAL_DEBUG = true;
 // Visualize the magnetometer response surface on the "MotionCal" GUI (https://www.pjrc.com/store/prop_shield.html)
 static bool MOTION_CAL_GUI_ENABLED  = false;
 
-// I2C Clock Speed (Uncomment one only)
-//static uint32_t I2C_CLOCK = 100000;     // 100kHz
-//static uint32_t I2C_CLOCK = 4000000;    // 400kHz
+// I2C Clock Speed
 static uint32_t I2C_CLOCK = 1000000;    // 1MHz
 
 // Dynamic Hard Iron corrector (Uncomment one only)
@@ -98,7 +96,7 @@ USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 
 // Pin definitions
 static uint32_t INTERRUPT_PIN = 32;
-static uint32_t LED_PIN = 13;
+static uint32_t LED_PIN       = 13;
 
 // Helpful constants
 
@@ -501,7 +499,7 @@ void setup()
 
     // Initialize I^2C bus, setting I2C clock speed to 100kHz
 #ifdef __MK20DX256__
-    Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_EXT, I2C_RATE_100);
+    Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_100);
 #else
     Wire.begin();
     delay(100);
