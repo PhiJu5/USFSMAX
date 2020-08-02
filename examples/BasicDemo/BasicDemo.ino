@@ -157,34 +157,6 @@ static void DRDY_handler()
     dataReady = true;
 }
 
-// Serial interface handler
-static void serialInterfaceHandler()
-{
-    uint8_t serial_input = 0;
-    if (Serial.available()) serial_input = Serial.read();
-    if (serial_input == 49) {sensorCal.GyroCal();} // Type "1" to initiate usfsmax Gyro Cal
-    if (serial_input == 50)                         // Type "2" to list current sensor calibration data
-    {
-        Wire.setClock(100000);     // Set I2C clock to 100kHz to read the calibration data from the MAX32660
-        delay(100);
-        usfsmax.retrieveFullGyroCal();
-        delay(100);
-        usfsmax.retrieveFullAccelCal();
-        delay(100);
-        usfsmax.retrieveEllipMagCal();
-        delay(100);
-        usfsmax.retrieveFinalMagCal();
-        delay(100);
-        Wire.setClock(I2C_CLOCK);  // Resume high-speed I2C operation
-        delay(100);
-
-        // Print the calibration results
-        sensorCal.sendOneToProceed();     // Halt the serial monitor to let the user read the calibration data
-    }
-    if (serial_input == 51) {usfsmax.resetDHI();} // Type "3" to reset the DHI corrector
-    serial_input = 0;
-}
-
 static void error(uint8_t status)
 {
     while (true) {
@@ -212,7 +184,7 @@ void setup()
     Wire.setClock(100000); 
 #endif
 
-    delay(2000);
+    delay(1000);
 
     uint8_t status = usfsmax.begin(); // Start USFSMAX
 
@@ -254,9 +226,6 @@ void loop()
     if (deltaT > UPDATE_PERIOD)  {                               // Update the serial monitor every "UPDATE_PERIOD" ms
 
         lastRefresh = millis();
-        usfsmax.getMxMy(UT_PER_COUNT);                        // Get Horizontal magnetic components
-
-        serialInterfaceHandler();
 
         if (ENABLE_DHI_CORRECTOR) {
             uint8_t calStatus = usfsmax.getCalibrationStatus();// Poll calibration status byte
