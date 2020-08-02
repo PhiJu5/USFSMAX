@@ -64,9 +64,6 @@ static volatile bool dataReady;
 // Serial update period (ms)
 static uint32_t UPDATE_PERIOD  = 100;
 
-// See the verbose screen update; set to false for spreadsheet or "MotionCal" GUI output
-static bool SERIAL_DEBUG = true;
-
 // Visualize the magnetometer response surface on the "MotionCal" GUI (https://www.pjrc.com/store/prop_shield.html)
 static bool MOTION_CAL_GUI_ENABLED  = false;
 
@@ -220,20 +217,11 @@ void setup()
 
     uint8_t status = usfsmax.begin(); // Start USFSMAX
 
-    if (SERIAL_DEBUG) {
+    Serial.println("Configuring the coprocessor...");
 
-        Serial.println("Configuring the coprocessor...");
-
-        if (status) {
-            error(status);
-        }
-
-        else {
-            Serial.print("Coprocessor configured! Reading sensor calibrations...\n");
-        }
+    if (status) {
+        error(status);
     }
-
-    usfsmax.readSensorCalibrations();
 
     Wire.setClock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
     delay(100);
@@ -241,10 +229,8 @@ void setup()
     // Attach interrupts
     attachInterrupt(INTERRUPT_PIN, DRDY_handler, RISING);           // Attach DRDY interrupt
 
-    if (SERIAL_DEBUG) {
-        Serial.println("USFXMAX successfully initialized!\n");
-        sensorCal.sendOneToProceed();                            // Halt the serial monitor to let the user read the results
-    }
+    Serial.println("USFXMAX successfully initialized!\n");
+    sensorCal.sendOneToProceed();                            // Halt the serial monitor to let the user read the results
 
 } // setup
 
@@ -271,12 +257,11 @@ void loop()
         lastRefresh = millis();
         usfsmax.getMxMy(UT_PER_COUNT);                        // Get Horizontal magnetic components
 
-        if (SERIAL_DEBUG) {
-            serialInterfaceHandler();
-            if (ENABLE_DHI_CORRECTOR) {
-                uint8_t calStatus = usfsmax.getCalibrationStatus();// Poll calibration status byte
-                usfsmax.getDHIRsq();                                               // Get DHI R-square
-            }
+        serialInterfaceHandler();
+
+        if (ENABLE_DHI_CORRECTOR) {
+            uint8_t calStatus = usfsmax.getCalibrationStatus();// Poll calibration status byte
+            usfsmax.getDHIRsq();                                               // Get DHI R-square
         }
 
         // Toggle LED if not calibrating gyroscopes
