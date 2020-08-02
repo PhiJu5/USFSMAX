@@ -30,6 +30,8 @@
 
 class USFSMAX
 {
+    friend class USFSMAX_Basic;
+
     public:
 
         static constexpr float MAG_UT_PER_COUNT = 0.15f; // LIS2MDL
@@ -152,10 +154,10 @@ class USFSMAX
                 const float magV,
                 const float magH,
                 const float magDec,
-                const bool enableDHICorrector=true,
-                const bool use2DDHICorrector=false,
-                const bool eulerQuatFlag=false,
-                const bool scaledSensorDataFlag=true);
+                const bool enableDHICorrector,
+                const bool use2DDHICorrector,
+                const bool eulerQuatFlag,
+                const bool scaledSensorDataFlag);
 
         uint8_t begin(uint8_t bus=1);
 
@@ -220,6 +222,30 @@ class USFSMAX
         void    retrieveFullGyroCal();
 
         void    sendGyroCalibrationRequest(void);
+
+    protected:
+
+        USFSMAX(void);
+
+        void init(
+                const AccelGyroODR_t accelODR, 
+                const AccelGyroODR_t gyroODR,
+                const MagODR_t magODR,
+                const BaroODR_t baroODR,
+                const QuatDiv_t quatDiv,
+                const LSM6DSMGyroLPF_t lsm6dsmGyroLPF,
+                const LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
+                const AccScale_t accScale,
+                const GyroScale_t gyroScale,
+                const LIS2MDLMagLpfODR_t lis2mdlMagLpfODR,
+                const LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
+                const float magV,
+                const float magH,
+                const float magDec,
+                const bool enableDHICorrector,
+                const bool use2DDHICorrector,
+                const bool eulerQuatFlag,
+                const bool scaledSensorDataFlag);
 
     private:
 

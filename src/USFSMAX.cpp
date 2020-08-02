@@ -26,11 +26,53 @@
  * WITH THE SOFTWARE.
  */
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "USFSMAX.h"
 #include <CrossPlatformI2C_Core.h>
 
 USFSMAX::USFSMAX(
+        const AccelGyroODR_t accelODR,
+        const AccelGyroODR_t gyroODR,
+        const MagODR_t magODR,
+        const BaroODR_t baroODR,
+        const QuatDiv_t quatDiv,
+        const LSM6DSMGyroLPF_t lsm6dsmGyroLPF,
+        const LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
+        const AccScale_t accScale,
+        const GyroScale_t gyroScale,
+        const LIS2MDLMagLpfODR_t lis2mdlMagLpfODR,
+        const LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
+        const float magV,
+        const float magH,
+        const float magDec,
+        const bool enableDHICorrector,
+        const bool use2DDHICorrector,
+        const bool eulerQuatFlag,
+        const bool scaledSensorDataFlag)
+
+{
+    init(
+        accelODR,
+        gyroODR,
+        magODR,
+        baroODR,
+        quatDiv,
+        lsm6dsmGyroLPF,
+        lsm6dsmGyroLpfODR,
+        accScale,
+        gyroScale,
+        lis2mdlMagLpfODR,
+        lps22hbBaroLpfODR,
+        magV,
+        magH,
+        magDec,
+        enableDHICorrector,
+        use2DDHICorrector,
+        eulerQuatFlag,
+        scaledSensorDataFlag);
+}
+
+void USFSMAX::init(
         const AccelGyroODR_t accelODR,
         const AccelGyroODR_t gyroODR,
         const MagODR_t magODR,
@@ -97,6 +139,10 @@ USFSMAX::USFSMAX(
 
     _eulerQuatFlag = eulerQuatFlag; 
     _scaledSensorDataFlag = scaledSensorDataFlag;
+}
+
+USFSMAX::USFSMAX(void)
+{
 }
 
 uint8_t USFSMAX::begin(uint8_t bus)

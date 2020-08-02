@@ -32,7 +32,7 @@
 #include <Wire.h>
 #endif
 
-#include "USFSMAX.h"
+#include "USFSMAX_Basic.h"
 
 // Un-comment one
 //static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
@@ -78,7 +78,7 @@ static USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF
 USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
 USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 
-static USFSMAX    
+static USFSMAX_Basic
 usfsmax(
         ACCEL_ODR,
         GYRO_ODR,
