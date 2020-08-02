@@ -171,6 +171,8 @@ class USFSMAX
 
         void readBaro(float & baro);
 
+        void readQuat(float quat[4]);
+
         // -------------------------------------------------------------------------
 
         typedef struct

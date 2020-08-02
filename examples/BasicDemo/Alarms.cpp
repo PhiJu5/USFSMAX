@@ -26,39 +26,62 @@
  * WITH THE SOFTWARE.
  */
 
-#pragma once
+#
+#include "Arduino.h"
+#include "Alarms.h"
 
-#include "USFSMAX.h"
-
-class USFSMAX_Basic : public USFSMAX
+Alarms::Alarms(uint8_t ledPin)
 {
-    public:
+    _ledPin = ledPin;
+}
 
-        USFSMAX_Basic(
-                const USFSMAX::AccelGyroODR_t accelODR, 
-                const USFSMAX::AccelGyroODR_t gyroODR, 
-                const USFSMAX::MagODR_t magODR, 
-                const USFSMAX::BaroODR_t baroODR, 
-                const USFSMAX::QuatDiv_t quatDiv,
-                const USFSMAX::LSM6DSMGyroLPF_t lsm6dsmGyroLPF, 
-                const USFSMAX::LSM6DSMAccLpfODR_t lsm6dsmGyroLpfODR,
-                const USFSMAX::AccScale_t accScale, 
-                const USFSMAX::GyroScale_t gyroScale,
-                const USFSMAX::LIS2MDLMagLpfODR_t lis2mdlMagLpfODR, 
-                const USFSMAX::LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
-                const float magV, 
-                const float magH, 
-                const float magDec);
+void Alarms::begin(void)
+{
+    pinMode(_ledPin, OUTPUT);
+    digitalWrite(_ledPin, HIGH);
+}
+/**
+* @fn: blink_blueLED(uint8_t num, uint8_t ontime,uint8_t repeat);
+*
+* @brief: Flashes red LED indicator; blocking function, do not use in main loop
+* 
+* @params: Blinks per ccle, on time, number of cycles
+* @returns: void
+*/
+void Alarms::blink_blueLED(uint8_t num, uint8_t ontime,uint8_t repeat) 
+{
+  uint8_t i, r;
+  for(r=0; r<repeat; r++)
+  {
+    for(i=0; i<num; i++)
+    {
+      toggle_blueLED();
+      delay(ontime);
+    }
+    //wait 60 ms
+    delay(60);
+  }
+}
 
-        void readGyroAcc(float gyro[3], float acc[3]);
+/**
+* @fn: LED On, off, toggle functions
+*
+* @brief: Fast direct manipulation functions for green/yellow LED
+* 
+* @params: void
+* @returns: void
+*/
+void Alarms::blueLEDon()
+{
+  digitalWrite(_ledPin, LOW);
+}
 
-        void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro);
+void Alarms::blueLEDoff()
+{
+  digitalWrite(_ledPin, HIGH);
+}
 
-        void readMagBaro(float mag[3], float & baro);
-
-        void readMag(float mag[3]);
-
-        void readBaro(float & baro);
-
-        void readQuat(float quat[4]);
-}; 
+void Alarms::toggle_blueLED()
+{
+    if (digitalRead(_ledPin)) digitalWrite(_ledPin, LOW); else digitalWrite(_ledPin, HIGH);
+}
