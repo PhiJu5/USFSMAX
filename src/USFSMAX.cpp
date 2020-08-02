@@ -198,7 +198,7 @@ uint8_t USFSMAX::begin(uint8_t bus)
     return status;
 }
 
-USFSMAX::DataReady_t USFSMAX::dataReadyFlags(void)
+USFSMAX::DataReady_t USFSMAX::dataReady(void)
 {
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch(getDataReadyStatus() & 0x0F) {
@@ -226,35 +226,6 @@ bool USFSMAX::quaternionReady(void)
 {
     return (bool)(getDataReadyStatus() & 0x10);
 }
-
-void USFSMAX::readGyroAcc(float gyro[3], float acc[3])
-{
-    int16_t  gyroADC[3] = {};
-    int16_t  accADC[3] = {};
-
-    getGyroAccelADC(gyroADC, accADC);
-
-    for(uint8_t i=0; i<3; i++) {
-        gyro[i] = gyroADC[i] * dpsPerCount;
-        acc[i]  = accADC[i]  * gPerCount;
-    }
-}
-
-void USFSMAX::readMag(float mag[3])
-{
-    int16_t magADC[3] = {};
-
-    getMagADC(magADC);
-
-    for(uint8_t i=0; i<3; i++) {
-        mag[i] = magADC[i] * MAG_UT_PER_COUNT;
-    }
-}
-
-void USFSMAX::readBaro(float & baro)
-{
-}
-
 
 // ------------------------------------------------------------------------------------------
 

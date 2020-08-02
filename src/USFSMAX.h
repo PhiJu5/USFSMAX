@@ -161,19 +161,9 @@ class USFSMAX
 
         uint8_t begin(uint8_t bus=1);
 
-        DataReady_t dataReadyFlags(void);
+        DataReady_t dataReady(void);
 
         bool quaternionReady(void);
-
-        void readGyroAcc(float gyro[3], float acc[3]);
-
-        void readMag(float mag[3]);
-
-        void readBaro(float & baro);
-
-        void readQuat(float quat[4]);
-
-        // -------------------------------------------------------------------------
 
         typedef struct
         {

@@ -142,7 +142,7 @@ static void fetchUsfsmaxData(void)
     float baro = 0;
 
     // Optimize the I2C read function with respect to whatever sensor data is ready
-    switch (usfsmax.dataReadyFlags()) {
+    switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
             dumpAccGyro();
             Serial.println();

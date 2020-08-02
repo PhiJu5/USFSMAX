@@ -52,7 +52,7 @@ class USFSMAX_Basic
 
         uint8_t begin(uint8_t bus=1);
 
-        USFSMAX::DataReady_t dataReadyFlags(void);
+        USFSMAX::DataReady_t dataReady(void);
 
         bool quaternionReady(void);
 

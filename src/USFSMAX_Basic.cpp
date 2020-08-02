@@ -47,33 +47,62 @@ USFSMAX_Basic::USFSMAX_Basic(
         const float magH,
         const float magDec)
 {
+    _usfsmax.init(
+        accelODR,
+        gyroODR,
+        magODR,
+        baroODR,
+        quatDiv,
+        lsm6dsmGyroLPF,
+        lsm6dsmGyroLpfODR,
+        accScale,
+        gyroScale,
+        lis2mdlMagLpfODR,
+        lps22hbBaroLpfODR,
+        magV,
+        magH,
+        magDec,
+        true,  // enableDHICorrector
+        false, // use2DDHICorrector
+        false, // eulerQuatFlag
+        true); // scaledSensorDataFlag
 }
 
 uint8_t USFSMAX_Basic::begin(uint8_t bus)
 {
+    _usfsmax.begin(bus);
 }
 
-USFSMAX::DataReady_t USFSMAX_Basic::dataReadyFlags(void)
+USFSMAX::DataReady_t USFSMAX_Basic::dataReady(void)
 {
+    return _usfsmax.dataReady();
 }
 
 bool USFSMAX_Basic::quaternionReady(void)
 {
-    return false;
+    return _usfsmax.quaternionReady();
 }
 
 void USFSMAX_Basic::readGyroAcc(float gyro[3], float acc[3])
 {
+    int16_t  gyroADC[3] = {};
+    int16_t  accADC[3] = {};
+
+    _usfsmax.getGyroAccelADC(gyroADC, accADC);
+
+    for(uint8_t i=0; i<3; i++) {
+        gyro[i] = gyroADC[i] * _usfsmax.dpsPerCount;
+        acc[i]  = accADC[i]  * _usfsmax.gPerCount;
+    }
 }
 
 void USFSMAX_Basic::readMag(float mag[3])
 {
-}
+    int16_t magADC[3] = {};
 
-void USFSMAX_Basic::readBaro(float & baro)
-{
-}
+    _usfsmax.getMagADC(magADC);
 
-void USFSMAX_Basic::readQuat(float quat[4])
-{
+    for(uint8_t i=0; i<3; i++) {
+        mag[i] = magADC[i] * USFSMAX::MAG_UT_PER_COUNT;
+    }
 }

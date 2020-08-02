@@ -229,7 +229,7 @@ static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[
     int16_t  magADC[3] = {};
 
     // Optimize the I2C read function with respect to whatever sensor data is ready
-    switch (usfsmax.dataReadyFlags()) {
+    switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
             usfsmax.getGyroAccelADC(gyroADC, accADC);
             convertGyroData(gyroADC, gyroData);
