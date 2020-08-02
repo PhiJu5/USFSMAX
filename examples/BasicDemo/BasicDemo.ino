@@ -136,6 +136,14 @@ static void dumpMag()
     dumpSensor(mag, "m");
 }
 
+static void dumpBaro()
+{
+    float baro = 0;
+    usfsmax.readBaro(baro);
+    Serial.print("b: ");
+    Serial.print(baro);
+}
+
 static void fetchUsfsmaxData(void)
 {
     float mag[3] = {};
@@ -151,13 +159,17 @@ static void fetchUsfsmaxData(void)
             dumpAccGyro();
             dumpDelimiter();
             dumpMag();
+            dumpDelimiter();
+            dumpBaro();
             Serial.println();
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
+            dumpBaro();
             break;
         case USFSMAX::DATA_READY_MAG:
             break;
         case USFSMAX::DATA_READY_BARO:
+            dumpBaro();
             break;
         default:
             break;

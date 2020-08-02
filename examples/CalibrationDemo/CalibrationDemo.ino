@@ -175,7 +175,7 @@ static void convertMagData(int16_t magADC[3], float magData[3])
 {
     if (SCALED_SENSOR_DATA_FLAG) {                 // Calibration data is applied in the coprocessor; just scale
         for(uint8_t i=0; i<3; i++) {
-            magData[i] = ((float)magADC[i])*USFSMAX::MAG_UT_PER_COUNT;
+            magData[i] = magADC[i] * USFSMAX::MAG_UT_PER_COUNT;
         }
     } else {                                   // Calibration data applied locally
         float magCalData[3];
@@ -191,7 +191,7 @@ static void convertAccData(int16_t accADC[3], float accData[3])
     float g_per_count = usfsmax.gPerCount;
     if (SCALED_SENSOR_DATA_FLAG) {                 // Calibration data is applied in the coprocessor; just scale
         for(uint8_t i=0; i<3; i++) {
-            accData[i] = ((float)accADC[i])*g_per_count;
+            accData[i] = accADC[i] * g_per_count;
         } 
     } else {                                   // Calibration data applied locally
         float sensorPoint[3];
@@ -205,7 +205,7 @@ static void convertGyroData(int16_t gyroADC[3], float gyroData[3])
     float  dps_per_count = usfsmax.dpsPerCount;
     if (SCALED_SENSOR_DATA_FLAG) {                 // Calibration data is applied in the coprocessor; just scale
         for(uint8_t i=0; i<3; i++) {
-            gyroData[i] = ((float)gyroADC[i])*dps_per_count;
+            gyroData[i] = gyroADC[i] * dps_per_count;
         }
     } else {                                   // Calibration data applied locally
         float sensorPoint[3];
@@ -447,7 +447,7 @@ static void reportCurrentData(float accData[3], float gyroData[3], float magData
     Serial.print(usfsmax.My, 2);
     Serial.println(" uT");
     Serial.print("Baro pressure = ");
-    Serial.print(((float)baroADC)/4096.0f);
+    Serial.print(baroADC/4096.0f);
     Serial.println(" hPa");
     Serial.println("");
     Serial.print("USFSMAX Quat: ");

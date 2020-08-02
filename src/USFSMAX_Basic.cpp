@@ -106,3 +106,14 @@ void USFSMAX_Basic::readMag(float mag[3])
         mag[i] = magADC[i] * USFSMAX::MAG_UT_PER_COUNT;
     }
 }
+
+void USFSMAX_Basic::readBaro(float & baro)
+{
+    int32_t baroADC = 0;
+    _usfsmax.getBaroADC(baroADC);
+    baro = baroADC / 4096.0f;
+}
+
+void USFSMAX_Basic::readQuat(float quat[4])
+{
+}
