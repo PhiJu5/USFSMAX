@@ -113,11 +113,17 @@ usfsmax(
 static void dump(float vals[3], const char * label)
 {
     Serial.print(label);
+    Serial.print(": ");
     Serial.print(vals[0]);
     Serial.print(" ");
     Serial.print(vals[1]);
     Serial.print(" ");
     Serial.print(vals[2]);
+}
+
+static void dumpGyro(float gyro[3])
+{
+    dump(gyro, "g");
 }
 
 static void fetchUsfsmaxData(void)
@@ -129,27 +135,24 @@ static void fetchUsfsmaxData(void)
     switch (usfsmax.dataReadyFlags()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
             usfsmax.readGyroAcc(gyro, acc);
-            dump(gyro, "g");
+            dumpGyro(gyro);
             Serial.println();
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            Serial.println("gyro acc mag baro");
+            dumpGyro(gyro);
+            Serial.println();
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
-            Serial.println("mag baro");
             break;
         case USFSMAX::DATA_READY_MAG:
-            Serial.println("mag");
             break;
         case USFSMAX::DATA_READY_BARO:
-            Serial.println("baro");
             break;
         default:
             break;
     };
 
     if (usfsmax.quaternionReady()) {
-        Serial.println("quat acc");
     }
 
 } // fetchUsfsmaxData
@@ -221,8 +224,7 @@ void loop()
     }
 
     // Update serial output
-    uint32_t deltaT = millis() - lastRefresh;
-    if (deltaT > UPDATE_PERIOD)  {                               // Update the serial monitor every "UPDATE_PERIOD" ms
+    if ((millis() - lastRefresh) > UPDATE_PERIOD)  {   
 
         lastRefresh = millis();
 
