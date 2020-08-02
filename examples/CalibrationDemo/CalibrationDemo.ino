@@ -48,10 +48,6 @@ static const float MAG_V           = 42.9631f; // angle, degrees
 static const float MAG_H           = 22.7568f; // angle, degrees
 static const float MAG_DECLINATION = 13.7433f; // uT
 
-// Calibration-related constants
-static const float LIS2MDL_UT_PER_COUNT =  0.15f;
-static const float  UT_PER_COUNT  = LIS2MDL_UT_PER_COUNT;
-
 // For alternative IMU fusion filter
 static const float RPS_PER_DPS  = 0.01745329;
 
@@ -179,12 +175,12 @@ static void convertMagData(int16_t magADC[3], float magData[3])
 {
     if (SCALED_SENSOR_DATA_FLAG) {                 // Calibration data is applied in the coprocessor; just scale
         for(uint8_t i=0; i<3; i++) {
-            magData[i] = ((float)magADC[i])*UT_PER_COUNT;
+            magData[i] = ((float)magADC[i])*USFSMAX::MAG_UT_PER_COUNT;
         }
     } else {                                   // Calibration data applied locally
         float magCalData[3];
         float sensorPoint[3];
-        sensorCal.apply_adv_calibration(usfsmax.ellipsoidMagCal, magADC, UT_PER_COUNT, magCalData);
+        sensorCal.apply_adv_calibration(usfsmax.ellipsoidMagCal, magADC, USFSMAX::MAG_UT_PER_COUNT, magCalData);
         sensorCal.apply_adv_calibration(usfsmax.finalMagCal, magCalData, 1.0f, sensorPoint);
         magOrientation(magData, sensorPoint);
     }
@@ -590,7 +586,7 @@ void loop()
     if (deltaT > UPDATE_PERIOD)  {                               // Update the serial monitor every "UPDATE_PERIOD" ms
 
         lastRefresh = millis();
-        usfsmax.getMxMy(UT_PER_COUNT);                        // Get Horizontal magnetic components
+        usfsmax.getMxMy();                        // Get Horizontal magnetic components
 
         if (SERIAL_DEBUG) {
             serialInterfaceHandler();

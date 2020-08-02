@@ -45,17 +45,6 @@ static const float MAG_V           = 42.9631f; // angle, degrees
 static const float MAG_H           = 22.7568f; // angle, degrees
 static const float MAG_DECLINATION = 13.7433f; // uT
 
-// Calibration-related constants
-static const float LIS2MDL_UT_PER_COUNT =  0.15f;
-static const float  UT_PER_COUNT  = LIS2MDL_UT_PER_COUNT;
-
-// For alternative IMU fusion filter
-static const float RPS_PER_DPS  = 0.01745329;
-
-// USFSMAX-related flags
-static const bool EULER_QUAT_FLAG         = false;
-static const bool SCALED_SENSOR_DATA_FLAG = true;
-
 // Support for interrupt handler
 static volatile bool dataReady;
 
@@ -67,10 +56,6 @@ static bool MOTION_CAL_GUI_ENABLED  = false;
 
 // I2C Clock Speed
 static uint32_t I2C_CLOCK = 1000000;    // 1MHz
-
-// Dynamic Hard Iron corrector (Uncomment one only)
-static bool ENABLE_DHI_CORRECTOR  = true;
-static bool USE_2D_DHI_CORRECTOR  = false;
 
 // Output Data Rates (ODRs)
 static USFSMAX::AccelGyroODR_t ACCEL_ODR = USFSMAX::ACCEL_GYRO_ODR_834;

@@ -32,6 +32,8 @@ class USFSMAX
 {
     public:
 
+        static constexpr float MAG_UT_PER_COUNT = 0.15f; // LIS2MDL
+
         typedef enum {
             ACCEL_GYRO_ODR_12_5 = 1,
             ACCEL_GYRO_ODR_26,
@@ -201,7 +203,7 @@ class USFSMAX
         void    getMagBaroADC(int16_t magADC[3], int32_t & baroADC);
         void    getLinAccADC();
 
-        void    getMxMy(const float utPerCount);
+        void    getMxMy(void);
 
         void    getQuat(float quat[4]);
         void    getQuatLin(float quat[4]);
