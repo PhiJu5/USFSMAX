@@ -45,8 +45,8 @@ BasicDemo: BasicDemo.o USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o linux.o
 BasicDemo.o: 
 	g++ -x c++ -std=c++11 -Wall -I$(USRC) -c ../../../examples/BasicDemo/BasicDemo.ino
 
-linux.o: linux.cpp 
-	g++ -std=c++11 -Wall -c linux.cpp
+linux.o: ../common/linux.cpp 
+	g++ -std=c++11 -Wall -c ../common/linux.cpp
 
 USFSMAX.o: $(USRC)/USFSMAX.cpp 
 	g++ -std=c++11 -Wall -I$(I2CINC) -I$(USRC) -c $(USRC)/USFSMAX.cpp
@@ -57,8 +57,8 @@ USFSMAX_Basic.o: $(USRC)/USFSMAX_Basic.cpp
 I2CDevI2C.o: $(I2CSRC)/I2CDevI2C.cpp 
 	g++ -std=c++11 -Wall -I$(I2CINC) -c $(I2CSRC)/I2CDevI2C.cpp
 
-main.o: main.cpp 
-	g++ -std=c++11 -Wall -c main.cpp
+main.o: ../common/main.cpp 
+	g++ -std=c++11 -Wall -c ../common/main.cpp
 
 run: $(TARG)
 	./$(TARG)
