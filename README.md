@@ -10,7 +10,8 @@ Changes I made to Greg's version:
 
 * Eliminated globals and #defines
 
-* Provided a simple API to basic functionality (scaled sensor readings)
+* Provided a simple [API](https://github.com/simondlevy/USFSMAX/blob/master/src/USFSMAX_Basic.h)
+to basic functionality (scaled sensor readings)
 
 * Moved all printout from library code to sketches
 
