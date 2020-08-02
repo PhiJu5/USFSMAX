@@ -8,7 +8,7 @@ Changes I made to Greg's version:
 
 * Made a proper Arduino repository
 
-* Eliminated globals and #defines in C++ classes
+* Eliminated globals and ```#define``` in C++ classes
 
 * Added a simple [API](https://github.com/simondlevy/USFSMAX/blob/master/src/USFSMAX_Basic.h)
 to basic functionality (scaled sensor readings)
