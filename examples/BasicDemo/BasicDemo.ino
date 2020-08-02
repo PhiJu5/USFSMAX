@@ -28,11 +28,17 @@
 
 #ifdef __MK20DX256__
 #include <i2c_t3.h>
-#else
+#elif defined(ARDUINO)
 #include <Wire.h>
 #endif
 
 #include "USFSMAX_Basic.h"
+
+// Cross-platform serial i/o support
+extern void serial_begin(void);
+extern void serial_print(const char * s);
+extern void serial_print(float x);
+extern void serial_print(uint8_t n);
 
 // Un-comment one
 //static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
@@ -92,55 +98,55 @@ usfsmax(
         MAG_H,
         MAG_DECLINATION);
 
-static void dumpVal(float val)
+static void serial_printVal(float val)
 {
-    Serial.print(val < 0 ? "" : "+");
-    Serial.print(val, 4);
+    serial_print(val < 0 ? "" : "+");
+    serial_print(val);
 }
 
-static void dumpSensor(float vals[3], const char * label, const char * units, uint8_t n=3)
+static void serial_printSensor(float vals[3], const char * label, const char * units, uint8_t n=3)
 {
-    Serial.print(label);
-    Serial.print(": ");
+    serial_print(label);
+    serial_print(": ");
 
     for (uint8_t k=0; k<n; ++k) {
-        dumpVal(vals[k]);
-        Serial.print(" ");
+        serial_printVal(vals[k]);
+        serial_print(" ");
     }
 
-    Serial.print(units);
-    Serial.print(" ");
+    serial_print(units);
+    serial_print(" ");
 }
 
-static void dumpDelimiter(void)
+static void serial_printDelimiter(void)
 {
-    Serial.print(" | ");
+    serial_print(" | ");
 }
 
-static void dumpAccGyro()
+static void serial_printAccGyro()
 {
     float gyro[3] = {};
     float acc[3] = {};
 
     usfsmax.readGyroAcc(gyro, acc);
 
-    dumpSensor(gyro, "g", "deg/s");
-    dumpDelimiter();
-    dumpSensor(acc, "a", "g");
+    serial_printSensor(gyro, "g", "deg/s");
+    serial_printDelimiter();
+    serial_printSensor(acc, "a", "g");
 }
 
-static void dumpMag()
+static void serial_printMag()
 {
     float mag[3] = {};
     usfsmax.readMag(mag);
-    dumpSensor(mag, "m", "uT");
+    serial_printSensor(mag, "m", "uT");
 }
 
-static void dumpBaro()
+static void serial_printBaro()
 {
     float baro = 0;
     usfsmax.readBaro(baro);
-    dumpSensor(&baro, "b", "hPa", 1);
+    serial_printSensor(&baro, "b", "hPa", 1);
 }
 
 static void fetchUsfsmaxData(void)
@@ -151,30 +157,30 @@ static void fetchUsfsmaxData(void)
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
-            dumpAccGyro();
-            Serial.println();
+            serial_printAccGyro();
+            serial_print("\n");
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            dumpAccGyro();
-            dumpDelimiter();
-            dumpMag();
-            dumpDelimiter();
-            dumpBaro();
-            Serial.println();
+            serial_printAccGyro();
+            serial_printDelimiter();
+            serial_printMag();
+            serial_printDelimiter();
+            serial_printBaro();
+            serial_print("\n");
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
-            dumpMag();
-            dumpDelimiter();
-            dumpBaro();
-            Serial.println();
+            serial_printMag();
+            serial_printDelimiter();
+            serial_printBaro();
+            serial_print("\n");
             break;
         case USFSMAX::DATA_READY_MAG:
-            dumpMag();
-            Serial.println();
+            serial_printMag();
+            serial_print("\n");
             break;
         case USFSMAX::DATA_READY_BARO:
-            dumpBaro();
-            Serial.println();
+            serial_printBaro();
+            serial_print("\n");
             break;
         default:
             break;
@@ -183,8 +189,8 @@ static void fetchUsfsmaxData(void)
     if (usfsmax.quaternionReady()) {
         float quat[4] = {};
         usfsmax.readQuat(quat);
-        dumpSensor(quat, "q", "", 4);
-        Serial.println();
+        serial_printSensor(quat, "q", "", 4);
+        serial_print("\n");
     }
 
 } // fetchUsfsmaxData
@@ -198,16 +204,16 @@ static void DRDY_handler()
 static void error(uint8_t status)
 {
     while (true) {
-        Serial.print("Got error ");
-        Serial.println(status);
+        serial_print("Got error ");
+        serial_print(status);
+        serial_print("\n");
         delay(500);
     }
 }
 
 void setup()
 {
-    // Open serial port
-    Serial.begin(115200);
+    serial_begin();
 
     // Set up DRDY interrupt pin
     pinMode(INTERRUPT_PIN, INPUT);
@@ -225,7 +231,7 @@ void setup()
 
     uint8_t status = usfsmax.begin(); // Start USFSMAX
 
-    Serial.println("Configuring the coprocessor...");
+    serial_print("Configuring the coprocessor...\n");
 
     if (status) {
         error(status);

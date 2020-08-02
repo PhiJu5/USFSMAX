@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 class USFSMAX
 {
     friend class USFSMAX_Basic;

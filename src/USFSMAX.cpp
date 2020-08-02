@@ -26,9 +26,13 @@
  * WITH THE SOFTWARE.
  */
 
-#include <Arduino.h>
 #include "USFSMAX.h"
 #include <CrossPlatformI2C_Core.h>
+#include <string.h>
+
+#if defined(ARDUINO)
+#include <Arduino.h> // support for delay()
+#endif
 
 USFSMAX::USFSMAX(
         const AccelGyroODR_t accelODR,

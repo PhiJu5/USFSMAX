@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include <Arduino.h>
 #include "USFSMAX_Basic.h"
 
 USFSMAX_Basic::USFSMAX_Basic(
