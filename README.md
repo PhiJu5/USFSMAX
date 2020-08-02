@@ -17,7 +17,8 @@ to basic functionality (scaled sensor readings)
 
 * Simplified arrays; e.g., ```gyroData[2][3]``` => ```gyroData[3]```
 
-* Use [CrossPlatformDataBus](https://github.com/simondlevy/CrossPlatformDataBus) to support multiple host types
+* Moved I<sup>2</sup>C support to
+[CrossPlatformDataBus](https://github.com/simondlevy/CrossPlatformDataBus) to support multiple host types
 (Arduino, RaspberryPi, NVIDIA Jetson); work in progress
 
 I have tested this library on the following hosts:
