@@ -163,10 +163,6 @@ class USFSMAX
 
         void readGyroAcc(float gyro[3], float acc[3]);
 
-        void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro);
-
-        void readMagBaro(float mag[3], float & baro);
-
         void readMag(float mag[3]);
 
         void readBaro(float & baro);

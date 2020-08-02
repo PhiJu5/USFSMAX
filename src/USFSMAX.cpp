@@ -190,6 +190,7 @@ void USFSMAX::readGyroAcc(float gyro[3], float acc[3])
 
     for(uint8_t i=0; i<3; i++) {
         gyro[i] = ((float)gyroADC[i])*dpsPerCount;
+        acc[i]  = ((float)accADC[i])*gPerCount;
     }
 }
 

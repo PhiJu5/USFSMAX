@@ -127,28 +127,31 @@ static void dumpSensor(float vals[3], const char * label)
     dumpVal(vals[2]);
 }
 
-static void dumpGyro(float gyro[3])
+static void dumpAccGyro()
 {
+    float gyro[3] = {};
+    float acc[3] = {};
+
+    usfsmax.readGyroAcc(gyro, acc);
+
     dumpSensor(gyro, "g");
+    Serial.print("\t|\t");
+    dumpSensor(acc, "a");
 }
 
 static void fetchUsfsmaxData(void)
 {
-    float gyro[3] = {};
-    float acc[3] = {};
     float mag[3] = {};
     float baro = 0;
 
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReadyFlags()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
-            usfsmax.readGyroAcc(gyro, acc);
-            dumpGyro(gyro);
+            dumpAccGyro();
             Serial.println();
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            usfsmax.readGyroAcc(gyro, acc);
-            dumpGyro(gyro);
+            dumpAccGyro();
             Serial.println();
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
