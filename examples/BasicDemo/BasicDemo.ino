@@ -93,11 +93,6 @@ static USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF
 USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
 USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 
-// Pin definitions
-static uint32_t LED_PIN       = 13;
-
-// Instantiate class objects
-
 static USFSMAX    
 usfsmax(
         ACCEL_ODR,
@@ -113,11 +108,7 @@ usfsmax(
         LPS22HB_BARO_LPF,
         MAG_V,
         MAG_H,
-        MAG_DECLINATION,
-        ENABLE_DHI_CORRECTOR,
-        USE_2D_DHI_CORRECTOR,
-        EULER_QUAT_FLAG,
-        SCALED_SENSOR_DATA_FLAG);
+        MAG_DECLINATION);
 
 static void fetchUsfsmaxData(void)
 {
@@ -237,11 +228,6 @@ void loop()
     if (deltaT > UPDATE_PERIOD)  {                               // Update the serial monitor every "UPDATE_PERIOD" ms
 
         lastRefresh = millis();
-
-        if (ENABLE_DHI_CORRECTOR) {
-            uint8_t calStatus = usfsmax.getCalibrationStatus();// Poll calibration status byte
-            usfsmax.getDHIRsq();                                               // Get DHI R-square
-        }
 
         dataReady = false;
     }
