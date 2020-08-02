@@ -39,14 +39,14 @@ all: $(TARG)
 I2CINC = $(CPDB)/src
 I2CSRC = $(CPDB)/extras/i2c/i2cdev/src
 
-BasicDemo: BasicDemo.o USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o serial.o
+BasicDemo: BasicDemo.o USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o linux.o
 	g++ -std=c++11 USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o 
 
 BasicDemo.o: 
 	g++ -x c++ -std=c++11 -Wall -I$(USRC) -c ../../../examples/BasicDemo/BasicDemo.ino
 
-serial.o: serial.cpp 
-	g++ -std=c++11 -Wall -c serial.cpp
+linux.o: linux.cpp 
+	g++ -std=c++11 -Wall -c linux.cpp
 
 USFSMAX.o: $(USRC)/USFSMAX.cpp 
 	g++ -std=c++11 -Wall -I$(I2CINC) -I$(USRC) -c $(USRC)/USFSMAX.cpp
