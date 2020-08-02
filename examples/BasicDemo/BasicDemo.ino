@@ -98,7 +98,7 @@ static void dumpVal(float val)
     Serial.print(val, 4);
 }
 
-static void dumpSensor(float vals[3], const char * label, uint8_t n=3)
+static void dumpSensor(float vals[3], const char * label, const char * units, uint8_t n=3)
 {
     Serial.print(label);
     Serial.print(": ");
@@ -107,6 +107,9 @@ static void dumpSensor(float vals[3], const char * label, uint8_t n=3)
         dumpVal(vals[k]);
         Serial.print(" ");
     }
+
+    Serial.print(units);
+    Serial.print(" ");
 }
 
 static void dumpDelimiter(void)
@@ -121,23 +124,23 @@ static void dumpAccGyro()
 
     usfsmax.readGyroAcc(gyro, acc);
 
-    dumpSensor(gyro, "g");
+    dumpSensor(gyro, "g", "deg/s");
     dumpDelimiter();
-    dumpSensor(acc, "a");
+    dumpSensor(acc, "a", "g");
 }
 
 static void dumpMag()
 {
     float mag[3] = {};
     usfsmax.readMag(mag);
-    dumpSensor(mag, "m");
+    dumpSensor(mag, "m", "uT");
 }
 
 static void dumpBaro()
 {
     float baro = 0;
     usfsmax.readBaro(baro);
-    dumpSensor(&baro, "b", 1);
+    dumpSensor(&baro, "b", "hPa", 1);
 }
 
 static void fetchUsfsmaxData(void)
@@ -180,7 +183,7 @@ static void fetchUsfsmaxData(void)
     if (usfsmax.quaternionReady()) {
         float quat[4] = {};
         usfsmax.readQuat(quat);
-        dumpSensor(quat, "q", 4);
+        dumpSensor(quat, "q", "", 4);
         Serial.println();
     }
 
