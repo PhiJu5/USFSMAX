@@ -185,7 +185,6 @@ static void serialInterfaceHandler()
         delay(100);
 
         // Print the calibration results
-        printCalibrationResults();
         sensorCal.sendOneToProceed();     // Halt the serial monitor to let the user read the calibration data
     }
     if (serial_input == 51) {usfsmax.resetDHI();} // Type "3" to reset the DHI corrector
@@ -196,99 +195,6 @@ static void serialInterfaceHandler()
     Serial.println("'2' List Cal Data");
     Serial.println("'3' Reset DHI Corrector\n");
 }
-
-static void printCalibrationResults(void)
-{
-    Serial.println("Gyroscope Sensor Offsets (dps)");
-    Serial.println(usfsmax.gyroCal.V[0], 4);
-    Serial.println(usfsmax.gyroCal.V[1], 4);
-    Serial.println(usfsmax.gyroCal.V[2], 4);
-    Serial.println("");
-    Serial.println("Gyroscope Calibration Tensor");
-    Serial.print(usfsmax.gyroCal.invW[0][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.gyroCal.invW[0][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.gyroCal.invW[0][2], 4);
-    Serial.print(usfsmax.gyroCal.invW[1][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.gyroCal.invW[1][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.gyroCal.invW[1][2], 4);
-    Serial.print(usfsmax.gyroCal.invW[2][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.gyroCal.invW[2][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.gyroCal.invW[2][2], 4);
-    Serial.println("\n");
-    Serial.println("Accelerometer Sensor Offsets (g)");
-    Serial.println(usfsmax.accelCal.V[0], 4);
-    Serial.println(usfsmax.accelCal.V[1], 4);
-    Serial.println(usfsmax.accelCal.V[2], 4);
-    Serial.println("");
-    Serial.println("Accelerometer Calibration Tensor");
-    Serial.print(usfsmax.accelCal.invW[0][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.accelCal.invW[0][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.accelCal.invW[0][2], 4);
-    Serial.print(usfsmax.accelCal.invW[1][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.accelCal.invW[1][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.accelCal.invW[1][2], 4);
-    Serial.print(usfsmax.accelCal.invW[2][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.accelCal.invW[2][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.accelCal.invW[2][2], 4);
-    Serial.println("\n");
-    Serial.println("Magnetometer Sensor Offsets (uT)");
-    Serial.println(usfsmax.ellipsoidMagCal.V[0], 4);
-    Serial.println(usfsmax.ellipsoidMagCal.V[1], 4);
-    Serial.println(usfsmax.ellipsoidMagCal.V[2], 4); 
-    Serial.println("");
-    Serial.println("Magnetometer Soft Iron Correction Tensor");
-    Serial.print(usfsmax.ellipsoidMagCal.invW[0][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.ellipsoidMagCal.invW[0][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.ellipsoidMagCal.invW[0][2], 4);
-    Serial.print(usfsmax.ellipsoidMagCal.invW[1][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.ellipsoidMagCal.invW[1][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.ellipsoidMagCal.invW[1][2], 4);
-    Serial.print(usfsmax.ellipsoidMagCal.invW[2][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.ellipsoidMagCal.invW[2][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.ellipsoidMagCal.invW[2][2], 4);
-    Serial.println("\n");
-    Serial.println("Magnetometer Residual Hard Iron Offsets (uT)");
-    Serial.println(usfsmax.finalMagCal.V[0], 4);
-    Serial.println(usfsmax.finalMagCal.V[1], 4);
-    Serial.println(usfsmax.finalMagCal.V[2], 4);
-    Serial.println("");
-    Serial.println("Magnetometer Fine Calibration/Alignment Tensor");
-    Serial.print(usfsmax.finalMagCal.invW[0][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.finalMagCal.invW[0][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.finalMagCal.invW[0][2], 4);
-    Serial.print(usfsmax.finalMagCal.invW[1][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.finalMagCal.invW[1][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.finalMagCal.invW[1][2], 4);
-    Serial.print(usfsmax.finalMagCal.invW[2][0], 4);
-    Serial.print(",");
-    Serial.print(usfsmax.finalMagCal.invW[2][1], 4);
-    Serial.print(",");
-    Serial.println(usfsmax.finalMagCal.invW[2][2], 4);
-    Serial.println("\n");
-
-} // printCalibrationResults
 
 static void error(uint8_t status)
 {
@@ -339,10 +245,6 @@ void setup()
     }
 
     usfsmax.readSensorCalibrations();
-
-    if (SERIAL_DEBUG) {
-        printCalibrationResults();
-    }
 
     Wire.setClock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
     delay(100);
