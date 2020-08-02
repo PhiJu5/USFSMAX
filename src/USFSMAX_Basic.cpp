@@ -26,8 +26,6 @@
  * WITH THE SOFTWARE.
  */
 
-#pragma once
-
 #include "USFSMAX_Basic.h"
 
 USFSMAX_Basic::USFSMAX_Basic(
@@ -69,7 +67,7 @@ USFSMAX_Basic::USFSMAX_Basic(
 
 uint8_t USFSMAX_Basic::begin(uint8_t bus)
 {
-    _usfsmax.begin(bus);
+    return _usfsmax.begin(bus);
 }
 
 USFSMAX::DataReady_t USFSMAX_Basic::dataReady(void)

@@ -21,7 +21,8 @@
 #include <unistd.h>
 #include <stdint.h>
 
-extern void setup(), loop();
+extern void setup(void);
+extern void loop(void);
 
 void delay(uint32_t msec)
 {

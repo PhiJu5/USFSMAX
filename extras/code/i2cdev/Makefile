@@ -40,7 +40,7 @@ I2CINC = $(CPDB)/src
 I2CSRC = $(CPDB)/extras/i2c/i2cdev/src
 
 BasicDemo: BasicDemo.o USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o linux.o
-	g++ -std=c++11 USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o linux.o
+	g++ -std=c++11 BasicDemo.o USFSMAX.o USFSMAX_Basic.o I2CDevI2C.o main.o linux.o
 
 BasicDemo.o: 
 	g++ -x c++ -std=c++11 -Wall -I$(USRC) -c ../../../examples/BasicDemo/BasicDemo.ino
