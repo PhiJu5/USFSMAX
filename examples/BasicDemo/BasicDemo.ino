@@ -51,9 +51,6 @@ static volatile bool dataReady;
 // Serial update period (ms)
 static uint32_t UPDATE_PERIOD  = 100;
 
-// Visualize the magnetometer response surface on the "MotionCal" GUI (https://www.pjrc.com/store/prop_shield.html)
-static bool MOTION_CAL_GUI_ENABLED  = false;
-
 // I2C Clock Speed
 static uint32_t I2C_CLOCK = 1000000;    // 1MHz
 
@@ -98,7 +95,7 @@ usfsmax(
 static void dumpVal(float val)
 {
     Serial.print(val < 0 ? "" : "+");
-    Serial.print(val);
+    Serial.print(val, 4);
 }
 
 static void dumpSensor(float vals[3], const char * label, uint8_t n=3)
@@ -108,13 +105,13 @@ static void dumpSensor(float vals[3], const char * label, uint8_t n=3)
 
     for (uint8_t k=0; k<n; ++k) {
         dumpVal(vals[k]);
-        Serial.print(k<(n-1) ? "\t" : "");
+        Serial.print(" ");
     }
 }
 
 static void dumpDelimiter(void)
 {
-    Serial.print("\t|\t");
+    Serial.print(" | ");
 }
 
 static void dumpAccGyro()
