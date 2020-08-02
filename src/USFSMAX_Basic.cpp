@@ -116,4 +116,5 @@ void USFSMAX_Basic::readBaro(float & baro)
 
 void USFSMAX_Basic::readQuat(float quat[4])
 {
+    _usfsmax.getQuatLin(quat);
 }

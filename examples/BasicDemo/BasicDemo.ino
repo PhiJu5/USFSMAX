@@ -101,15 +101,15 @@ static void dumpVal(float val)
     Serial.print(val);
 }
 
-static void dumpSensor(float vals[3], const char * label)
+static void dumpSensor(float vals[3], const char * label, uint8_t n=3)
 {
     Serial.print(label);
     Serial.print(": ");
-    dumpVal(vals[0]);
-    Serial.print("\t");
-    dumpVal(vals[1]);
-    Serial.print("\t");
-    dumpVal(vals[2]);
+
+    for (uint8_t k=0; k<n; ++k) {
+        dumpVal(vals[k]);
+        Serial.print(k<(n-1) ? "\t" : "");
+    }
 }
 
 static void dumpDelimiter(void)
@@ -140,8 +140,7 @@ static void dumpBaro()
 {
     float baro = 0;
     usfsmax.readBaro(baro);
-    Serial.print("b: ");
-    Serial.print(baro);
+    dumpSensor(&baro, "b", 1);
 }
 
 static void fetchUsfsmaxData(void)
@@ -164,18 +163,28 @@ static void fetchUsfsmaxData(void)
             Serial.println();
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
+            dumpMag();
+            dumpDelimiter();
             dumpBaro();
+            Serial.println();
             break;
         case USFSMAX::DATA_READY_MAG:
+            dumpMag();
+            Serial.println();
             break;
         case USFSMAX::DATA_READY_BARO:
             dumpBaro();
+            Serial.println();
             break;
         default:
             break;
     };
 
     if (usfsmax.quaternionReady()) {
+        float quat[4] = {};
+        usfsmax.readQuat(quat);
+        dumpSensor(quat, "q", 4);
+        Serial.println();
     }
 
 } // fetchUsfsmaxData
