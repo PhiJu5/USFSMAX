@@ -33,7 +33,6 @@
 #endif
 
 #include "USFSMAX.h"
-#include "SensorCal.h"
 
 // Un-comment one
 //static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
@@ -120,8 +119,6 @@ usfsmax(
         EULER_QUAT_FLAG,
         SCALED_SENSOR_DATA_FLAG);
 
-static SensorCal sensorCal(&usfsmax);
-
 static void fetchUsfsmaxData(void)
 {
     // Optimize the I2C read function with respect to whatever sensor data is ready
@@ -166,6 +163,20 @@ static void error(uint8_t status)
     }
 }
 
+static void sendOneToProceed()
+{
+  uint8_t input = 0;
+  
+  Serial.println("Send '1' to continue...");
+
+  while(true) {
+    input = Serial.read();
+    if(input == 49) break;
+    delay(10);
+  }
+}
+
+
 void setup()
 {
     // Open serial port
@@ -201,7 +212,7 @@ void setup()
     attachInterrupt(INTERRUPT_PIN, DRDY_handler, RISING);           // Attach DRDY interrupt
 
     Serial.println("USFXMAX successfully initialized!\n");
-    sensorCal.sendOneToProceed();                            // Halt the serial monitor to let the user read the results
+    sendOneToProceed();                            // Halt the serial monitor to let the user read the results
 
 } // setup
 
@@ -232,12 +243,6 @@ void loop()
             usfsmax.getDHIRsq();                                               // Get DHI R-square
         }
 
-        // Toggle LED if not calibrating gyroscopes
-        if (sensorCal.gyroCalActive) {
-            if ((usfsmax.getCalibrationStatus() & 0x01) == 0) {
-                sensorCal.gyroCalActive = false;
-            }
-        } 
         dataReady = false;
     }
 
