@@ -8,12 +8,12 @@ Changes I made to Greg's version:
 
 * Made a proper Arduino repository
 
-* Eliminated globals and #defines
+* Eliminated globals and #defines in C++ classes
 
-* Provided a simple [API](https://github.com/simondlevy/USFSMAX/blob/master/src/USFSMAX_Basic.h)
+* Added a simple [API](https://github.com/simondlevy/USFSMAX/blob/master/src/USFSMAX_Basic.h)
 to basic functionality (scaled sensor readings)
 
-* Moved all printout from library code to sketches
+* Moved all printout from classes to sketches
 
 * Simplified arrays; e.g., ```gyroData[2][3]``` => ```gyroData[3]```
 
