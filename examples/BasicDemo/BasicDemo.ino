@@ -110,12 +110,27 @@ usfsmax(
         MAG_H,
         MAG_DECLINATION);
 
+static void dump(float vals[3], const char * label)
+{
+    Serial.print(label);
+    Serial.print(vals[0]);
+    Serial.print(" ");
+    Serial.print(vals[1]);
+    Serial.print(" ");
+    Serial.print(vals[2]);
+}
+
 static void fetchUsfsmaxData(void)
 {
+    float gyro[3] = {};
+    float acc[3] = {};
+
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReadyFlags()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
-            Serial.println("gyro acc");
+            usfsmax.readGyroAcc(gyro, acc);
+            dump(gyro, "g");
+            Serial.println();
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
             Serial.println("gyro acc mag baro");
@@ -154,25 +169,10 @@ static void error(uint8_t status)
     }
 }
 
-static void sendOneToProceed()
-{
-  uint8_t input = 0;
-  
-  Serial.println("Send '1' to continue...");
-
-  while(true) {
-    input = Serial.read();
-    if(input == 49) break;
-    delay(10);
-  }
-}
-
-
 void setup()
 {
     // Open serial port
     Serial.begin(115200);
-    delay(2000);
 
     // Set up DRDY interrupt pin
     pinMode(INTERRUPT_PIN, INPUT);
@@ -201,9 +201,6 @@ void setup()
 
     // Attach interrupts
     attachInterrupt(INTERRUPT_PIN, DRDY_handler, RISING);           // Attach DRDY interrupt
-
-    Serial.println("USFXMAX successfully initialized!\n");
-    sendOneToProceed();                            // Halt the serial monitor to let the user read the results
 
 } // setup
 
