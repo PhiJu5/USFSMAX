@@ -26,19 +26,7 @@
  * WITH THE SOFTWARE.
  */
 
-#ifdef __MK20DX256__
-#include <i2c_t3.h>
-#elif defined(ARDUINO)
-#include <Wire.h>
-#endif
-
 #include "USFSMAX_Basic.h"
-
-// Cross-platform serial i/o support
-extern void serial_begin(void);
-extern void serial_print(const char * s);
-extern void serial_print(float x);
-extern void serial_print(uint8_t n);
 
 // Un-comment one
 //static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
@@ -80,6 +68,17 @@ static USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF
 // IMU scaling
 USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
 USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
+
+// Cross-platform support
+extern void     serial_begin(void);
+extern void     serial_print(const char * s);
+extern void     serial_print(float x);
+extern void     serial_print(uint8_t n);
+extern void     delay_msec(uint32_t msec);
+extern uint32_t get_millis(void);
+extern void     setup_interrupt(uint8_t pin, void (*handler)(void));
+extern void     i2c_begin(void);
+extern void     i2c_set_clock(uint32_t speed);
 
 static USFSMAX_Basic
 usfsmax(
@@ -151,9 +150,6 @@ static void serial_printBaro()
 
 static void fetchUsfsmaxData(void)
 {
-    float mag[3] = {};
-    float baro = 0;
-
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
@@ -207,7 +203,7 @@ static void error(uint8_t status)
         serial_print("Got error ");
         serial_print(status);
         serial_print("\n");
-        delay(500);
+        delay_msec(500);
     }
 }
 
@@ -215,19 +211,9 @@ void setup()
 {
     serial_begin();
 
-    // Set up DRDY interrupt pin
-    pinMode(INTERRUPT_PIN, INPUT);
-
     // Initialize I^2C bus, setting I2C clock speed to 100kHz
-#ifdef __MK20DX256__
-    Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_100);
-#else
-    Wire.begin();
-    delay(100);
-    Wire.setClock(100000); 
-#endif
-
-    delay(1000);
+    i2c_begin();
+    delay_msec(1000);
 
     uint8_t status = usfsmax.begin(); // Start USFSMAX
 
@@ -237,21 +223,17 @@ void setup()
         error(status);
     }
 
-    Wire.setClock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
-    delay(100);
+    i2c_set_clock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
+    delay_msec(100);
 
-    // Attach interrupts
-    attachInterrupt(INTERRUPT_PIN, DRDY_handler, RISING);           // Attach DRDY interrupt
+    // Attach interrupt
+    setup_interrupt(INTERRUPT_PIN, DRDY_handler);
 
 } // setup
 
 void loop()
 {
-    int32_t  baroADC;
-
     static uint32_t lastRefresh;
-
-    float quat[4];
 
     if (dataReady) {
 
@@ -262,13 +244,13 @@ void loop()
     }
 
     // Update serial output
-    if ((millis() - lastRefresh) > UPDATE_PERIOD)  {   
+    if ((get_millis() - lastRefresh) > UPDATE_PERIOD)  {   
 
-        lastRefresh = millis();
+        lastRefresh = get_millis();
 
         dataReady = false;
     }
 
-    delay(5);
+    delay_msec(5);
 
 } // loop

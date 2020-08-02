@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019,2020 Gregory Tomasch and Simon D. Levy.  All rights reserved.
+ * Copyright (c) 2020 Simon D. Levy and Gregory Tomasch.  All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -26,22 +26,24 @@
  * WITH THE SOFTWARE.
  */
 
+#include <stdio.h>
+#include <stdint.h>
+
 void serial_begin(void)
 {
-    Serial.begin(115200);
 }
 
 void serial_print(const char * s)
 {
-    Serial.print(s);
+    printf("%s", s);
 }
 
 void serial_print(float x)
 {
-    Serial.print(x, 4);
+    printf("%4f", x);
 }
 
 void serial_print(uint8_t n)
 {
-    Serial.print(n);
+    printf("%d", n);
 }
