@@ -101,26 +101,6 @@ USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 // Pin definitions
 static uint32_t LED_PIN       = 13;
 
-// Helpful constants
-
-enum axes
-{
-    EAST = 0,
-    NORTH,
-    UP
-};
-
-enum attitudes
-{
-    PITCH = 0,
-    ROLL,
-    YAW
-};
-
-
-// Support timing test for alternate quaternion fusion
-static uint32_t startTime;
-
 // Instantiate class objects
 
 static Alarms alarms(LED_PIN);
@@ -148,12 +128,8 @@ usfsmax(
 
 static SensorCal sensorCal(&usfsmax, 0, &alarms);
 
-static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[3], float quat[4], int32_t & baroADC)
+static void fetchUsfsmaxData(void)
 {
-    int16_t  gyroADC[3] = {};
-    int16_t  accADC[3] = {};
-    int16_t  magADC[3] = {};
-
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReadyFlags()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
@@ -314,19 +290,6 @@ static void printCalibrationResults(void)
 
 } // printCalibrationResults
 
-static void printSpreadsheetHeader(void)
-{
-    Serial.print("Time");        
-    Serial.print(","); 
-    Serial.print("Heading (deg)"); 
-    Serial.print(",");
-    Serial.print("Pitch (deg)"); 
-    Serial.print(","); 
-    Serial.print("Roll (deg)");   
-    Serial.print(",");
-    Serial.print("Cal Status\n");  
-}
-
 static void error(uint8_t status)
 {
     while (true) {
@@ -392,12 +355,6 @@ void setup()
         sensorCal.sendOneToProceed();                            // Halt the serial monitor to let the user read the results
     }
 
-    else if (!MOTION_CAL_GUI_ENABLED) { // Print header for spreadsheet data collection
-        printSpreadsheetHeader();
-    }
-
-    startTime = micros();                                     // Set sketch start time
-
 } // setup
 
 void loop()
@@ -406,10 +363,6 @@ void loop()
 
     static uint32_t lastRefresh;
 
-    float gyroData[3] = {};
-    float accData[3] = {};
-    float magData[3] = {};
-
     float quat[4];
 
     if (dataReady) {
@@ -417,7 +370,7 @@ void loop()
         dataReady = false;
 
         // Get the new data from the USFSMAX, and run our alternate quaternion IMU if we have new gyro data
-        fetchUsfsmaxData(gyroData, accData, magData, quat, baroADC);
+        fetchUsfsmaxData();
     }
 
     // Update serial output
