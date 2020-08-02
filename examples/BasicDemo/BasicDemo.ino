@@ -224,33 +224,26 @@ static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReadyFlags()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
-            usfsmax.getGyroAccelADC(gyroADC, accADC);
-            convertGyroData(gyroADC, gyroData);
-            convertAccData(accADC, accData);
+            Serial.println("gyro acc");
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            usfsmax.getGyroAccelMagBaroADC(gyroADC, accADC, magADC, baroADC);
-            convertGyroData(gyroADC, gyroData);
-            convertAccData(accADC, accData);
-            convertMagData(magADC, magData);
+            Serial.println("gyro acc mag baro");
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
-            usfsmax.getMagBaroADC(magADC, baroADC);
-            convertMagData(magADC, magData);
+            Serial.println("mag baro");
             break;
         case USFSMAX::DATA_READY_MAG:
-            usfsmax.getMagADC(magADC);
-            convertMagData(magADC, magData);
+            Serial.println("mag");
             break;
         case USFSMAX::DATA_READY_BARO:
-            usfsmax.getBaroADC(baroADC);
+            Serial.println("baro");
             break;
         default:
             break;
     };
 
     if (usfsmax.quaternionReady()) {
-        usfsmax.getQuatLin(quat);
+        Serial.println("quat acc");
     }
 
 } // fetchUsfsmaxData
@@ -410,74 +403,6 @@ static void error(uint8_t status)
     }
 }
 
-static void reportCurrentData(float accData[3], float gyroData[3], float magData[3], int32_t baroADC, float quat[4])
-{
-    Serial.print("ax = ");
-    Serial.print((int)(1000.0f*accData[0]));
-    Serial.print(" ay = ");
-    Serial.print((int)(1000.0f*accData[1]));
-    Serial.print(" az = ");
-    Serial.print((int)(1000.0f*accData[2]));
-    Serial.println(" mg");
-    Serial.print("gx = ");
-    Serial.print(gyroData[0], 1);
-    Serial.print(" gy = ");
-    Serial.print(gyroData[1], 1); 
-    Serial.print(" gz = ");
-    Serial.print(gyroData[2], 1);
-    Serial.println(" deg/s");
-    Serial.print("mx = ");
-    Serial.print(magData[0], 1);
-    Serial.print(" my = ");
-    Serial.print(magData[1], 1);
-    Serial.print(" mz = ");
-    Serial.print(magData[2], 1);
-    Serial.println(" uT");
-    Serial.print("Tomasch Xh, Yh: ");
-    Serial.print(usfsmax.Mx, 2);
-    Serial.print(", ");
-    Serial.print(usfsmax.My, 2);
-    Serial.println(" uT");
-    Serial.print("Baro pressure = ");
-    Serial.print(((float)baroADC)/4096.0f);
-    Serial.println(" hPa");
-    Serial.println("");
-    Serial.print("USFSMAX Quat: ");
-    Serial.print("q0 = ");
-    Serial.print(quat[0], 4);
-    Serial.print(" qx = ");
-    Serial.print(quat[1], 4);
-    Serial.print(" qy = ");
-    Serial.print(quat[2], 4); 
-    Serial.print(" qz = ");
-    Serial.print(quat[3], 4);
-    Serial.println("");
-
-} // reportCurrentData
-
-static void dumpMagData(float magData[3])
-{
-    Serial.print("Raw:");
-    Serial.print(0);                                   // MotionCal GUI doesn't act upon accel/gyro input; send null data
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print((int16_t)(magData[0]*10.0f));      // The MotionCal GUI is expecting 0.1uT/LSB
-    Serial.print(',');
-    Serial.print((int16_t)(magData[1]*10.0f));
-    Serial.print(',');
-    Serial.print((int16_t)(magData[2]*10.0f));
-    Serial.println();
-}
-
 void setup()
 {
     // Open serial port
@@ -574,24 +499,7 @@ void loop()
             if (ENABLE_DHI_CORRECTOR) {
                 uint8_t calStatus = usfsmax.getCalibrationStatus();// Poll calibration status byte
                 usfsmax.getDHIRsq();                                               // Get DHI R-square
-                Serial.print("Dynamic Hard Iron Correction Valid = ");
-                Serial.println(calStatus & 0x80);                                 // DHI correction status
-                Serial.print("Dynamic Hard Iron Fit R-square = ");
-                Serial.println(usfsmax.Rsq, 4);
-                Serial.println(USE_2D_DHI_CORRECTOR ? "Using the 2D Corrector\n" : "Using the 3D Corrector");
-            } else {
-                Serial.print("Dynamic Hard Iron Correction Disabled!\n\n");
             }
-
-            // usfsmax sensor and raw quaternion outout
-            reportCurrentData(accData, gyroData, magData, baroADC, quat);
-        }
-
-        // Output formatted MotionCal GUI magnetometer data message when
-        // "MOTION_CAL_GUI_ENABLED" is defined and "SERIAL_DEBUG" is not defined 
-        // https://www.pjrc.com/store/prop_shield.html
-        else if (MOTION_CAL_GUI_ENABLED) {
-            dumpMagData(magData);
         }
 
         // Toggle LED if not calibrating gyroscopes
