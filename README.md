@@ -2,7 +2,7 @@
 
 This repository derives from Greg Tomasch's [code](https://github.com/gregtomasch/USFSMAX) for the Pesky Products
 [USFSMAX motion coprocessor](https://www.tindie.com/products/onehorse/max32660-motion-co-processor/).  
-See Greg's library for details.
+See Greg's README for details.
 
 Changes I made to Greg's version:
 
