@@ -30,9 +30,7 @@
 #include <CrossPlatformI2C_Core.h>
 #include <string.h>
 
-#if defined(ARDUINO)
-#include <Arduino.h> // support for delay()
-#endif
+extern void delay_msec(uint32_t msec);
 
 USFSMAX::USFSMAX(
         const AccelGyroODR_t accelODR,
@@ -155,13 +153,13 @@ uint8_t USFSMAX::begin(uint8_t bus)
 
     uint8_t status = readRegister(FUSION_STATUS);     // Read the coprocessor's current fusion status
 
-    delay(100);
+    delay_msec(100);
 
     if (status == 0) {
 
         writeRegister(FUSION_START_STOP, 0x00); // Stop sensor fusion
 
-        delay(100);
+        delay_msec(100);
 
         // Upload configuration structure variable
         USFSMAX::uploadConfig(_Cfg[0]);
@@ -170,11 +168,11 @@ uint8_t USFSMAX::begin(uint8_t bus)
         writeRegister(FUSION_START_STOP, 
                 ((0x01 | ((uint8_t)_eulerQuatFlag) << 1) | ((uint8_t)_scaledSensorDataFlag) << 2));
 
-        delay(100);
+        delay_msec(100);
 
         // Poll the FUSION_STATUS register to see if fusion has resumed
         while (true) {
-            delay(10);
+            delay_msec(10);
             status = readRegister(FUSION_STATUS);
             if((status & FUSION_RUNNING_MASK)) {
                 break;
@@ -197,7 +195,7 @@ uint8_t USFSMAX::begin(uint8_t bus)
         }
     }
 
-    delay(100);
+    delay_msec(100);
 
     return status;
 }
@@ -236,13 +234,13 @@ bool USFSMAX::quaternionReady(void)
 void USFSMAX::readSensorCalibrations(void)
 {
     retrieveFullGyroCal();
-    delay(100);
+    delay_msec(100);
     USFSMAX::retrieveFullAccelCal();
-    delay(100);
+    delay_msec(100);
     USFSMAX::retrieveEllipMagCal();
-    delay(100);
+    delay_msec(100);
     USFSMAX::retrieveFinalMagCal();
-    delay(500);
+    delay_msec(500);
 }
 
 void USFSMAX::uploadConfig(CoProcessorConfig_t Config)
@@ -251,7 +249,7 @@ void USFSMAX::uploadConfig(CoProcessorConfig_t Config)
 
     CmdByte = 0x08;  // Clears bit0 to stop fusion an sets bit3 to specify configuration uplaod
     writeRegister(FUSION_START_STOP, CmdByte);
-    delay(1000);
+    delay_msec(1000);
 
     // Assign configuration values
     Config.cal_points        = CAL_POINTS;
@@ -293,9 +291,9 @@ void USFSMAX::uploadConfig(CoProcessorConfig_t Config)
 
     // Upload configuration bytes
     writeRegisters(COPRO_CFG_DATA0, 30, &_cfg_buff[0]);
-    delay(100);
+    delay_msec(100);
     writeRegisters(COPRO_CFG_DATA1, (sizeof(CoProcessorConfig_t) - 30), &_cfg_buff[30]);
-    delay(100);
+    delay_msec(100);
 }
 
 void USFSMAX::getGyroAccelMagBaroADC(int16_t  gyroADC[3], int16_t accADC[3], int16_t magADC[3], int32_t & baroADC)
@@ -439,7 +437,7 @@ void USFSMAX::resetDHI()
 void USFSMAX::retrieveConfig()
 {
     readRegisters(COPRO_CFG_DATA0, 30, &_cfg_buff[0]);
-    delay(100);
+    delay_msec(100);
     readRegisters(COPRO_CFG_DATA1, (sizeof(CoProcessorConfig_t) - 30), &_cfg_buff[30]);
     memcpy(&_Cfg[0], _cfg_buff, sizeof(CoProcessorConfig_t));
 }
@@ -448,7 +446,7 @@ void USFSMAX::retrieveFullAccelCal()
 {
     uint8_t AccelCal_buff[sizeof(fullAdvCal_t)];
     readRegisters(ACCEL_CAL_DATA0, 30, &AccelCal_buff[0]);
-    delay(100);
+    delay_msec(100);
     readRegisters(ACCEL_CAL_DATA1, (sizeof(fullAdvCal_t) - 30), &AccelCal_buff[30]);
     memcpy(&accelCal, AccelCal_buff, sizeof(fullAdvCal_t));
 }
@@ -457,7 +455,7 @@ void USFSMAX::retrieveEllipMagCal()
 {
     uint8_t EllipMagCal_buff[sizeof(fullAdvCal_t)];
     readRegisters(ELLIP_MAG_CAL_DATA0, 30, &EllipMagCal_buff[0]);
-    delay(100);
+    delay_msec(100);
     readRegisters(ELLIP_MAG_CAL_DATA1, (sizeof(fullAdvCal_t) - 30), &EllipMagCal_buff[30]);
     memcpy(&ellipsoidMagCal, EllipMagCal_buff, sizeof(fullAdvCal_t));
 }
@@ -466,7 +464,7 @@ void USFSMAX::retrieveFinalMagCal()
 {
     uint8_t FineMagCal_buff[sizeof(fullAdvCal_t)];
     readRegisters(FINE_MAG_CAL_DATA0, 30, &FineMagCal_buff[0]);
-    delay(100);
+    delay_msec(100);
     readRegisters(FINE_MAG_CAL_DATA1, (sizeof(fullAdvCal_t) - 30), &FineMagCal_buff[30]);
     memcpy(&finalMagCal, FineMagCal_buff, sizeof(fullAdvCal_t));
 }
@@ -475,7 +473,7 @@ void USFSMAX::retrieveFullGyroCal()
 {
     uint8_t GyroCal_buff[sizeof(fullAdvCal_t)];
     readRegisters(GYRO_CAL_DATA0, 30, &GyroCal_buff[0]);
-    delay(100);
+    delay_msec(100);
     readRegisters(GYRO_CAL_DATA1, (sizeof(fullAdvCal_t) - 30), &GyroCal_buff[30]);
     memcpy(&gyroCal, GyroCal_buff, sizeof(fullAdvCal_t));
 }

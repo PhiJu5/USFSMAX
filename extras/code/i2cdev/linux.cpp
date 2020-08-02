@@ -47,3 +47,24 @@ void serial_print(uint8_t n)
 {
     printf("%d", n);
 }
+
+void delay_msec(uint32_t msec)
+{
+}
+
+uint32_t get_millis(void)
+{
+    return 0;
+}
+
+void setup_interrupt(uint8_t pin, void (*handler)(void))
+{
+}
+
+void i2c_begin(void)
+{
+}
+
+void i2c_set_clock(uint32_t speed)
+{
+}
