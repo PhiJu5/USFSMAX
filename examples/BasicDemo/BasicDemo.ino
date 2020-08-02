@@ -33,7 +33,6 @@
 #endif
 
 #include "Alarms.h"
-#include "IMU.h"
 #include "USFSMAX.h"
 #include "SensorCal.h"
 
@@ -216,8 +215,7 @@ static void convertGyroData(int16_t gyroADC[3], float gyroData[3])
     }
 }
 
-static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[3], 
-        float quat[4], float angle[2], float & heading, int32_t & baroADC)
+static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[3], float quat[4], int32_t & baroADC)
 {
     int16_t  gyroADC[3] = {};
     int16_t  accADC[3] = {};
@@ -412,8 +410,7 @@ static void error(uint8_t status)
     }
 }
 
-static void reportCurrentData(float accData[3], float gyroData[3], float magData[3], 
-        int32_t baroADC, float quat[4], float angle[2], float heading)
+static void reportCurrentData(float accData[3], float gyroData[3], float magData[3], int32_t baroADC, float quat[4])
 {
     Serial.print("ax = ");
     Serial.print((int)(1000.0f*accData[0]));
@@ -557,15 +554,12 @@ void loop()
 
     float quat[4];
 
-    static float angle[2];
-    static float heading;
-
     if (dataReady) {
 
         dataReady = false;
 
         // Get the new data from the USFSMAX, and run our alternate quaternion IMU if we have new gyro data
-        fetchUsfsmaxData(gyroData, accData, magData, quat, angle, heading, baroADC);
+        fetchUsfsmaxData(gyroData, accData, magData, quat, baroADC);
     }
 
     // Update serial output
@@ -590,7 +584,7 @@ void loop()
             }
 
             // usfsmax sensor and raw quaternion outout
-            reportCurrentData(accData, gyroData, magData, baroADC, quat, angle, heading);
+            reportCurrentData(accData, gyroData, magData, baroADC, quat);
         }
 
         // Output formatted MotionCal GUI magnetometer data message when
