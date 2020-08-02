@@ -110,26 +110,34 @@ usfsmax(
         MAG_H,
         MAG_DECLINATION);
 
-static void dump(float vals[3], const char * label)
+static void dumpVal(float val)
+{
+    Serial.print(val < 0 ? "" : "+");
+    Serial.print(val);
+}
+
+static void dumpSensor(float vals[3], const char * label)
 {
     Serial.print(label);
     Serial.print(": ");
-    Serial.print(vals[0]);
-    Serial.print(" ");
-    Serial.print(vals[1]);
-    Serial.print(" ");
-    Serial.print(vals[2]);
+    dumpVal(vals[0]);
+    Serial.print("\t");
+    dumpVal(vals[1]);
+    Serial.print("\t");
+    dumpVal(vals[2]);
 }
 
 static void dumpGyro(float gyro[3])
 {
-    dump(gyro, "g");
+    dumpSensor(gyro, "g");
 }
 
 static void fetchUsfsmaxData(void)
 {
     float gyro[3] = {};
     float acc[3] = {};
+    float mag[3] = {};
+    float baro = 0;
 
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReadyFlags()) {
@@ -139,6 +147,7 @@ static void fetchUsfsmaxData(void)
             Serial.println();
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
+            usfsmax.readGyroAcc(gyro, acc);
             dumpGyro(gyro);
             Serial.println();
             break;
