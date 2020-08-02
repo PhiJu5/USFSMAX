@@ -32,7 +32,6 @@
 #include <Wire.h>
 #endif
 
-#include "Alarms.h"
 #include "USFSMAX.h"
 #include "SensorCal.h"
 
