@@ -112,6 +112,11 @@ static void dumpSensor(float vals[3], const char * label)
     dumpVal(vals[2]);
 }
 
+static void dumpDelimiter(void)
+{
+    Serial.print("\t|\t");
+}
+
 static void dumpAccGyro()
 {
     float gyro[3] = {};
@@ -120,8 +125,15 @@ static void dumpAccGyro()
     usfsmax.readGyroAcc(gyro, acc);
 
     dumpSensor(gyro, "g");
-    Serial.print("\t|\t");
+    dumpDelimiter();
     dumpSensor(acc, "a");
+}
+
+static void dumpMag()
+{
+    float mag[3] = {};
+    usfsmax.readMag(mag);
+    dumpSensor(mag, "m");
 }
 
 static void fetchUsfsmaxData(void)
@@ -137,6 +149,8 @@ static void fetchUsfsmaxData(void)
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
             dumpAccGyro();
+            dumpDelimiter();
+            dumpMag();
             Serial.println();
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
