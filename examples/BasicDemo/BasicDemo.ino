@@ -147,8 +147,6 @@ usfsmax(
         EULER_QUAT_FLAG,
         SCALED_SENSOR_DATA_FLAG);
 
-static IMU imu;
-
 static SensorCal sensorCal(&usfsmax, 0, &alarms);
 
 static void accOrientation(float accData[3], float sensorPoint[3])
@@ -218,13 +216,6 @@ static void convertGyroData(int16_t gyroADC[3], float gyroData[3])
     }
 }
 
-static void computeAnglesFromQuat(float quat[4], float angle[2], float & heading)
-
-{
-    usfsmax.getQuatLin(quat);
-    imu.compute(quat, angle, heading);
-}
-
 static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[3], 
         float quat[4], float angle[2], float & heading, int32_t & baroADC)
 {
@@ -255,14 +246,13 @@ static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[
             break;
         case USFSMAX::DATA_READY_BARO:
             usfsmax.getBaroADC(baroADC);
-            Serial.println("baro");
             break;
         default:
             break;
     };
 
     if (usfsmax.quaternionReady()) {
-        computeAnglesFromQuat(quat, angle, heading);
+        usfsmax.getQuatLin(quat);
     }
 
 } // fetchUsfsmaxData
@@ -465,14 +455,6 @@ static void reportCurrentData(float accData[3], float gyroData[3], float magData
     Serial.print(" qz = ");
     Serial.print(quat[3], 4);
     Serial.println("");
-
-    // Euler angles
-    Serial.print("USFSMAX Yaw, Pitch, Roll: ");
-    Serial.print(heading, 2);
-    Serial.print(", "); 
-    Serial.print(angle[1], 2); 
-    Serial.print(", "); 
-    Serial.println(angle[0], 2);
 
 } // reportCurrentData
 

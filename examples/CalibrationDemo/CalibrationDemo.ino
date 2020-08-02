@@ -255,7 +255,6 @@ static void fetchUsfsmaxData(float gyroData[3], float accData[3], float magData[
             break;
         case USFSMAX::DATA_READY_BARO:
             usfsmax.getBaroADC(baroADC);
-            Serial.println("baro");
             break;
         default:
             break;
