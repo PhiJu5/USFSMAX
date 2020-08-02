@@ -30,9 +30,8 @@
 
 #include "USFSMAX.h"
 
-class USFSMAX_Basic
+class USFSMAX_Basic : public USFSMAX
 {
-
     public:
 
         USFSMAX_Basic(
@@ -51,12 +50,6 @@ class USFSMAX_Basic
                 const float magH, 
                 const float magDec);
 
-        uint8_t begin(uint8_t bus=1);
-
-        USFSMAX::DataReady_t dataReadyFlags(void);
-
-        bool quaternionReady(void);
-
         void readGyroAcc(float gyro[3], float acc[3]);
 
         void readGyroAccMagBaro(float gyro[3], float acc[3], float mag[3], float & baro);
@@ -67,7 +60,5 @@ class USFSMAX_Basic
 
         void readBaro(float & baro);
 
-    private:
-
-        //USFSMAX _usfsmax;
+        void readQuat(float quat[4]);
 }; 

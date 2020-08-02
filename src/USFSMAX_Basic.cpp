@@ -45,19 +45,24 @@ USFSMAX_Basic::USFSMAX_Basic(
         const USFSMAX::LPS22HBBaroLpfODR_t lps22hbBaroLpfODR,
         const float magV, 
         const float magH, 
-        const float magDec)
-{
-}
+        const float magDec) :
+    USFSMAX(
+            accelODR, 
+            gyroODR, 
+            magODR, 
+            baroODR, 
+            quatDiv,
+            lsm6dsmGyroLPF, 
+            lsm6dsmGyroLpfODR,
+            accScale, 
+            gyroScale,
+            lis2mdlMagLpfODR, 
+            lps22hbBaroLpfODR,
+            magV, 
+            magH, 
+            magDec)
 
-uint8_t USFSMAX_Basic::begin(uint8_t bus)
 {
-}
-
-USFSMAX::DataReady_t USFSMAX_Basic::dataReadyFlags(void)
-{
-}
-
-bool USFSMAX_Basic::quaternionReady(void) {
 }
 
 void USFSMAX_Basic::readGyroAcc(float gyro[3], float acc[3])
@@ -79,3 +84,8 @@ void USFSMAX_Basic::readMag(float mag[3])
 void USFSMAX_Basic::readBaro(float & baro)
 {
 }
+
+void USFSMAX_Basic::readQuat(float quat[4])
+{
+}
+
