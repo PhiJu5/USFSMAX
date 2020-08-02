@@ -30,18 +30,15 @@
 #include "Arduino.h"
 #include "SensorCal.h"
 
-SensorCal::SensorCal(USFSMAX* usfsmax, uint8_t sensornum, Alarms * alarms)
+SensorCal::SensorCal(USFSMAX* usfsmax)
 {
   _usfsmax   = usfsmax;
-  _sensornum = sensornum;
-  _alarms    = alarms;
 }
 
 void SensorCal::GyroCal()
 {
-  _alarms->blueLEDoff();
   _usfsmax->sendGyroCalibrationRequest();
-  gyroCalActive[_sensornum] = true;
+  gyroCalActive = true;
 }
 
 void SensorCal::sendOneToProceed()

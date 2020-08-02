@@ -103,8 +103,6 @@ static uint32_t LED_PIN       = 13;
 
 // Instantiate class objects
 
-static Alarms alarms(LED_PIN);
-
 static USFSMAX    
 usfsmax(
         ACCEL_ODR,
@@ -126,7 +124,7 @@ usfsmax(
         EULER_QUAT_FLAG,
         SCALED_SENSOR_DATA_FLAG);
 
-static SensorCal sensorCal(&usfsmax, 0, &alarms);
+static SensorCal sensorCal(&usfsmax);
 
 static void fetchUsfsmaxData(void)
 {
@@ -189,11 +187,6 @@ static void serialInterfaceHandler()
     }
     if (serial_input == 51) {usfsmax.resetDHI();} // Type "3" to reset the DHI corrector
     serial_input = 0;
-
-    // Hotkey messaging
-    Serial.println("'1' Gyro Cal");
-    Serial.println("'2' List Cal Data");
-    Serial.println("'3' Reset DHI Corrector\n");
 }
 
 static void error(uint8_t status)
@@ -213,10 +206,6 @@ void setup()
 
     // Set up DRDY interrupt pin
     pinMode(INTERRUPT_PIN, INPUT);
-
-    // Assign Indicator LED
-    alarms.begin();
-    alarms.blueLEDoff();
 
     // Initialize I^2C bus, setting I2C clock speed to 100kHz
 #ifdef __MK20DX256__
@@ -291,14 +280,11 @@ void loop()
         }
 
         // Toggle LED if not calibrating gyroscopes
-        if (sensorCal.gyroCalActive[0]) {
-            alarms.blueLEDoff();
+        if (sensorCal.gyroCalActive) {
             if ((usfsmax.getCalibrationStatus() & 0x01) == 0) {
-                sensorCal.gyroCalActive[0] = false;
+                sensorCal.gyroCalActive = false;
             }
-        } else {
-            alarms.toggle_blueLED();
-        }
+        } 
         dataReady = false;
     }
 

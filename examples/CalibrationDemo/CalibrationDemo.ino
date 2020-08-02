@@ -149,7 +149,7 @@ usfsmax(
 
 static IMU imu;
 
-static SensorCal sensorCal(&usfsmax, 0, &alarms);
+static SensorCal sensorCal(&usfsmax, &alarms);
 
 static void accOrientation(float accData[3], float sensorPoint[3])
 {
@@ -618,10 +618,10 @@ void loop()
         }
 
         // Toggle LED if not calibrating gyroscopes
-        if (sensorCal.gyroCalActive[0]) {
+        if (sensorCal.gyroCalActive) {
             alarms.blueLEDoff();
             if ((usfsmax.getCalibrationStatus() & 0x01) == 0) {
-                sensorCal.gyroCalActive[0] = false;
+                sensorCal.gyroCalActive = false;
             }
         } else {
             alarms.toggle_blueLED();

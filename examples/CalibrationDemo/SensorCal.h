@@ -35,7 +35,7 @@ class SensorCal
 {
     public:
 
-        SensorCal(USFSMAX* usfsmax, uint8_t sensornum, Alarms* alarms);
+        SensorCal(USFSMAX* usfsmax, Alarms* alarms);
 
         void GyroCal();
         void apply_adv_calibration(USFSMAX::fullAdvCal_t calibration, int16_t *raw, float sf, float *out);
@@ -43,12 +43,11 @@ class SensorCal
         void sendOneToProceed();
 
         // Status flags
-        bool  gyroCalActive[2] = {false, false};
+        bool  gyroCalActive = false;
 
     private:
 
         // Passed to constructor
         USFSMAX* _usfsmax;
-        uint8_t  _sensornum;
         Alarms*  _alarms;
 };
