@@ -62,12 +62,6 @@ uint32_t get_millis(void)
     return millis();
 }
 
-void setup_interrupt(uint8_t pin, void (*handler)(void))
-{
-    pinMode(pin, INPUT);
-    attachInterrupt(pin, handler, RISING);
-}
-
 void i2c_begin(void)
 {
 #ifdef __MK20DX256__
@@ -84,3 +78,16 @@ void i2c_set_clock(uint32_t speed)
 {
     Wire.setClock(speed);
 }
+
+void interrupt_setup(uint8_t pin, void (*handler)(void))
+{
+    pinMode(pin, INPUT);
+    attachInterrupt(pin, handler, RISING);
+}
+
+bool interrupt_override(void)
+{
+    return false;
+}
+
+

@@ -76,9 +76,10 @@ extern void     serial_print(float x);
 extern void     serial_print(uint8_t n);
 extern void     delay_msec(uint32_t msec);
 extern uint32_t get_millis(void);
-extern void     setup_interrupt(uint8_t pin, void (*handler)(void));
 extern void     i2c_begin(void);
 extern void     i2c_set_clock(uint32_t speed);
+extern void     interrupt_setup(uint8_t pin, void (*handler)(void));
+extern bool     interrupt_override(void); // for wiringPi, i2cdev
 
 static USFSMAX_Basic
 usfsmax(
@@ -226,8 +227,8 @@ void setup()
     i2c_set_clock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
     delay_msec(100);
 
-    // Attach interrupt
-    setup_interrupt(INTERRUPT_PIN, DRDY_handler);
+    // Attach interrupt (implemented only for Arduino)
+    interrupt_setup(INTERRUPT_PIN, DRDY_handler);
 
 } // setup
 
@@ -235,7 +236,7 @@ void loop()
 {
     static uint32_t lastRefresh;
 
-    if (dataReady) {
+    if (dataReady || interrupt_override()) {
 
         dataReady = false;
 

@@ -57,14 +57,21 @@ uint32_t get_millis(void)
     return 0;
 }
 
-void setup_interrupt(uint8_t pin, void (*handler)(void))
-{
-}
-
 void i2c_begin(void)
 {
 }
 
 void i2c_set_clock(uint32_t speed)
 {
+}
+
+void interrupt_setup(uint8_t pin, void (*handler)(void))
+{
+    (void)pin;
+    (void)handler;
+}
+
+bool interrupt_override(void)
+{
+    return true;
 }
