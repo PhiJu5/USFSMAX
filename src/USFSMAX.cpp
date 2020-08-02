@@ -189,8 +189,8 @@ void USFSMAX::readGyroAcc(float gyro[3], float acc[3])
     getGyroAccelADC(gyroADC, accADC);
 
     for(uint8_t i=0; i<3; i++) {
-        gyro[i] = ((float)gyroADC[i])*dpsPerCount;
-        acc[i]  = ((float)accADC[i])*gPerCount;
+        gyro[i] = gyroADC[i] * dpsPerCount;
+        acc[i]  = accADC[i]  * gPerCount;
     }
 }
 
@@ -201,7 +201,7 @@ void USFSMAX::readMag(float mag[3])
     getMagADC(magADC);
 
     for(uint8_t i=0; i<3; i++) {
-        mag[i] = ((float)magADC[i])*MAG_UT_PER_COUNT;
+        mag[i] = magADC[i] * MAG_UT_PER_COUNT;
     }
 }
 
@@ -357,8 +357,8 @@ void USFSMAX::getMxMy(void)
     H[0] = ((int16_t)bytes[1] << 8) | bytes[0];
     H[1] = ((int16_t)bytes[3] << 8) | bytes[2];
 
-    Mx = ((float)H[0])*MAG_UT_PER_COUNT;
-    My = ((float)H[1])*MAG_UT_PER_COUNT;
+    Mx = H[0] * MAG_UT_PER_COUNT;
+    My = H[1] * MAG_UT_PER_COUNT;
 }
 
 void USFSMAX::getQuat(float quat[4])
