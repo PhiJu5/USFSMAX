@@ -38,9 +38,9 @@
 #include "SensorCal.h"
 
 // Un-comment one
-//static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
-//static uint32_t INTERRUPT_PIN = 32; // TinyPICO
-static uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
+//static cost uint32_t INTERRUPT_PIN = 23; // Teensy4.0
+static const uint32_t INTERRUPT_PIN = 32; // TinyPICO
+//static cost uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
 
 // Magnetic constants for Kelseyville, CA
 // For your location, use https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
@@ -59,44 +59,44 @@ static const bool SCALED_SENSOR_DATA_FLAG = true;
 static volatile bool dataReady;
 
 // Serial update period (ms)
-static uint32_t UPDATE_PERIOD  = 100;
+static const uint32_t UPDATE_PERIOD  = 100;
 
 // See the verbose screen update; set to false for spreadsheet or "MotionCal" GUI output
 static bool SERIAL_DEBUG = true;
 
 // Visualize the magnetometer response surface on the "MotionCal" GUI (https://www.pjrc.com/store/prop_shield.html)
-static bool MOTION_CAL_GUI_ENABLED  = false;
+static const bool MOTION_CAL_GUI_ENABLED  = false;
 
 // I2C Clock Speed
-static uint32_t I2C_CLOCK = 1000000;    // 1MHz
+static const uint32_t I2C_CLOCK = 1000000;    // 1MHz
 
 // Dynamic Hard Iron corrector (Uncomment one only)
-static bool ENABLE_DHI_CORRECTOR  = true;
-static bool USE_2D_DHI_CORRECTOR  = false;
+static const bool ENABLE_DHI_CORRECTOR  = true;
+static const bool USE_2D_DHI_CORRECTOR  = false;
 
 // Output Data Rates (ODRs)
-static USFSMAX::AccelGyroODR_t ACCEL_ODR = USFSMAX::ACCEL_GYRO_ODR_834;
-static USFSMAX::AccelGyroODR_t GYRO_ODR  = USFSMAX::ACCEL_GYRO_ODR_834;
-static USFSMAX::MagODR_t       MAG_ODR   = USFSMAX::MAG_ODR_100;
-static USFSMAX::BaroODR_t      BARO_ODR  = USFSMAX::BARO_ODR_50;
-static USFSMAX::QuatDiv_t      QUAT_DIV  = USFSMAX::QUAT_DIV_8;
+static const USFSMAX::AccelGyroODR_t ACCEL_ODR = USFSMAX::ACCEL_GYRO_ODR_834;
+static const USFSMAX::AccelGyroODR_t GYRO_ODR  = USFSMAX::ACCEL_GYRO_ODR_834;
+static const USFSMAX::MagODR_t       MAG_ODR   = USFSMAX::MAG_ODR_100;
+static const USFSMAX::BaroODR_t      BARO_ODR  = USFSMAX::BARO_ODR_50;
+static const USFSMAX::QuatDiv_t      QUAT_DIV  = USFSMAX::QUAT_DIV_8;
 
 // LSM6DSM filter settings
-static USFSMAX::LSM6DSMGyroLPF_t   LSM6DSM_GYRO_LPF    = USFSMAX::LSM6DSM_GYRO_LPF_167;
-static USFSMAX::LSM6DSMAccLpfODR_t LSM6DSM_ACC_LPF_ODR = USFSMAX::LSM6DSM_ACC_LPF_ODR_DIV400;
+static const USFSMAX::LSM6DSMGyroLPF_t   LSM6DSM_GYRO_LPF    = USFSMAX::LSM6DSM_GYRO_LPF_167;
+static const USFSMAX::LSM6DSMAccLpfODR_t LSM6DSM_ACC_LPF_ODR = USFSMAX::LSM6DSM_ACC_LPF_ODR_DIV400;
 
 // LIS2MDL filter setting
-static USFSMAX::LIS2MDLMagLpfODR_t LIS2MDL_MAG_LPF_ODR = USFSMAX::LIS2MDL_MAG_LPF_ODR_4;
+static const USFSMAX::LIS2MDLMagLpfODR_t LIS2MDL_MAG_LPF_ODR = USFSMAX::LIS2MDL_MAG_LPF_ODR_4;
 
 // LPS22HB baro filter setting
-static USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF_ODR_20;
+static const USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF_ODR_20;
 
 // IMU scaling
 USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
 USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 
 // Pin definitions
-static uint32_t LED_PIN       = 13;
+static const uint8_t LED_PIN = 13;
 
 // Helpful constants
 

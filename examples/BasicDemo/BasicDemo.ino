@@ -28,10 +28,16 @@
 
 #include "USFSMAX_Basic.h"
 
+#ifdef __MK20DX256__
+#include <i2c_t3.h>
+#elif defined(ARDUINO)
+#include <Wire.h>
+#endif
+
 // Un-comment one
 //static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
-//static uint32_t INTERRUPT_PIN = 32; // TinyPICO
-static uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
+static uint32_t INTERRUPT_PIN = 32; // TinyPICO
+//static uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
 
 // Magnetic constants for Kelseyville, CA
 // For your location, use https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
@@ -43,43 +49,32 @@ static const float MAG_DECLINATION = 13.7433f; // uT
 static volatile bool dataReady;
 
 // Serial update period (ms)
-static uint32_t UPDATE_PERIOD  = 100;
+static const uint32_t UPDATE_PERIOD  = 100;
 
 // I2C Clock Speed
-static uint32_t I2C_CLOCK = 1000000;    // 1MHz
+static const uint32_t I2C_CLOCK = 1000000;    // 1MHz
 
 // Output Data Rates (ODRs)
-static USFSMAX::AccelGyroODR_t ACCEL_ODR = USFSMAX::ACCEL_GYRO_ODR_834;
-static USFSMAX::AccelGyroODR_t GYRO_ODR  = USFSMAX::ACCEL_GYRO_ODR_834;
-static USFSMAX::MagODR_t       MAG_ODR   = USFSMAX::MAG_ODR_100;
-static USFSMAX::BaroODR_t      BARO_ODR  = USFSMAX::BARO_ODR_50;
-static USFSMAX::QuatDiv_t      QUAT_DIV  = USFSMAX::QUAT_DIV_8;
+static const USFSMAX::AccelGyroODR_t ACCEL_ODR = USFSMAX::ACCEL_GYRO_ODR_834;
+static const USFSMAX::AccelGyroODR_t GYRO_ODR  = USFSMAX::ACCEL_GYRO_ODR_834;
+static const USFSMAX::MagODR_t       MAG_ODR   = USFSMAX::MAG_ODR_100;
+static const USFSMAX::BaroODR_t      BARO_ODR  = USFSMAX::BARO_ODR_50;
+static const USFSMAX::QuatDiv_t      QUAT_DIV  = USFSMAX::QUAT_DIV_8;
 
 // LSM6DSM filter settings
-static USFSMAX::LSM6DSMGyroLPF_t   LSM6DSM_GYRO_LPF    = USFSMAX::LSM6DSM_GYRO_LPF_167;
-static USFSMAX::LSM6DSMAccLpfODR_t LSM6DSM_ACC_LPF_ODR = USFSMAX::LSM6DSM_ACC_LPF_ODR_DIV400;
+static const USFSMAX::LSM6DSMGyroLPF_t   LSM6DSM_GYRO_LPF    = USFSMAX::LSM6DSM_GYRO_LPF_167;
+static const USFSMAX::LSM6DSMAccLpfODR_t LSM6DSM_ACC_LPF_ODR = USFSMAX::LSM6DSM_ACC_LPF_ODR_DIV400;
 
 // LIS2MDL filter setting
-static USFSMAX::LIS2MDLMagLpfODR_t LIS2MDL_MAG_LPF_ODR = USFSMAX::LIS2MDL_MAG_LPF_ODR_4;
+static const USFSMAX::LIS2MDLMagLpfODR_t LIS2MDL_MAG_LPF_ODR = USFSMAX::LIS2MDL_MAG_LPF_ODR_4;
 
 // LPS22HB baro filter setting
-static USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF_ODR_20;
+static const USFSMAX::LPS22HBBaroLpfODR_t LPS22HB_BARO_LPF = USFSMAX::LPS22HB_BARO_LPF_ODR_20;
 
 // IMU scaling
-USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
-USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
+static const USFSMAX::AccScale_t  ACC_SCALE  = USFSMAX::ACC_SCALE_16;
+static const USFSMAX::GyroScale_t GYRO_SCALE = USFSMAX::GYRO_SCALE_2000;
 
-// Cross-platform support
-extern void     serial_begin(void);
-extern void     serial_print(const char * s);
-extern void     serial_print(float x);
-extern void     serial_print(uint8_t n);
-extern void     delay_msec(uint32_t msec);
-extern uint32_t get_millis(void);
-extern void     i2c_begin(void);
-extern void     i2c_set_clock(uint32_t speed);
-extern void     interrupt_setup(uint8_t pin, void (*handler)(void));
-extern bool     interrupt_override(void); // for wiringPi, i2cdev
 
 static USFSMAX_Basic
 usfsmax(
@@ -100,27 +95,27 @@ usfsmax(
 
 static void serial_printVal(float val)
 {
-    serial_print(val < 0 ? "" : "+");
-    serial_print(val);
+    Serial.print(val < 0 ? "" : "+");
+    Serial.print(val);
 }
 
 static void serial_printSensor(float vals[3], const char * label, const char * units, uint8_t n=3)
 {
-    serial_print(label);
-    serial_print(": ");
+    Serial.print(label);
+    Serial.print(": ");
 
     for (uint8_t k=0; k<n; ++k) {
         serial_printVal(vals[k]);
-        serial_print(" ");
+        Serial.print(" ");
     }
 
-    serial_print(units);
-    serial_print(" ");
+    Serial.print(units);
+    Serial.print(" ");
 }
 
 static void serial_printDelimiter(void)
 {
-    serial_print(" | ");
+    Serial.print(" | ");
 }
 
 static void serial_printAccGyro()
@@ -155,7 +150,7 @@ static void fetchUsfsmaxData(void)
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
             serial_printAccGyro();
-            serial_print("\n");
+            Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
             serial_printAccGyro();
@@ -163,21 +158,21 @@ static void fetchUsfsmaxData(void)
             serial_printMag();
             serial_printDelimiter();
             serial_printBaro();
-            serial_print("\n");
+            Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
             serial_printMag();
             serial_printDelimiter();
             serial_printBaro();
-            serial_print("\n");
+            Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_MAG:
             serial_printMag();
-            serial_print("\n");
+            Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_BARO:
             serial_printBaro();
-            serial_print("\n");
+            Serial.print("\n");
             break;
         default:
             break;
@@ -187,7 +182,7 @@ static void fetchUsfsmaxData(void)
         float quat[4] = {};
         usfsmax.readQuat(quat);
         serial_printSensor(quat, "q", "", 4);
-        serial_print("\n");
+        Serial.print("\n");
     }
 
 } // fetchUsfsmaxData
@@ -201,34 +196,41 @@ static void DRDY_handler()
 static void error(uint8_t status)
 {
     while (true) {
-        serial_print("Got error ");
-        serial_print(status);
-        serial_print("\n");
-        delay_msec(500);
+        Serial.print("Got error ");
+        Serial.print(status);
+        Serial.print("\n");
+        delay(500);
     }
 }
 
 void setup()
 {
-    serial_begin();
+    Serial.begin(115200);
 
     // Initialize I^2C bus, setting I2C clock speed to 100kHz
-    i2c_begin();
-    delay_msec(1000);
+#ifdef __MK20DX256__
+    Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_100);
+#else
+    Wire.begin();
+    delay(100);
+    Wire.setClock(100000); 
+#endif
+    delay(1000);
 
     uint8_t status = usfsmax.begin(); // Start USFSMAX
 
-    serial_print("Configuring the coprocessor...\n");
+    Serial.print("Configuring the coprocessor...\n");
 
     if (status) {
         error(status);
     }
 
-    i2c_set_clock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
-    delay_msec(100);
+    Wire.setClock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
+    delay(100);
 
     // Attach interrupt (implemented only for Arduino)
-    interrupt_setup(INTERRUPT_PIN, DRDY_handler);
+    pinMode(INTERRUPT_PIN, INPUT);
+    attachInterrupt(INTERRUPT_PIN, DRDY_handler, RISING);
 
 } // setup
 
@@ -236,7 +238,7 @@ void loop()
 {
     static uint32_t lastRefresh;
 
-    if (dataReady || interrupt_override()) {
+    if (dataReady) {
 
         dataReady = false;
 
@@ -245,13 +247,13 @@ void loop()
     }
 
     // Update serial output
-    if ((get_millis() - lastRefresh) > UPDATE_PERIOD)  {   
+    if ((millis() - lastRefresh) > UPDATE_PERIOD)  {   
 
-        lastRefresh = get_millis();
+        lastRefresh = millis();
 
         dataReady = false;
     }
 
-    delay_msec(5);
+    delay(5);
 
 } // loop
