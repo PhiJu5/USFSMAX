@@ -50,7 +50,7 @@ main.o: main.cpp
 WiringPiI2C.o: $(I2CSRC)/WiringPiI2C.cpp 
 	g++ -std=c++11 -Wall -I$(CPSRC) -c $(I2CSRC)/WiringPiI2C.cpp
 
-run: min
+run: main
 	./main
 
 edit:
