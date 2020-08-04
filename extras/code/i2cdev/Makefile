@@ -48,7 +48,7 @@ BasicDemo.o:
 linux.o: ../common/linux.cpp 
 	g++ -std=c++11 -Wall -c ../common/linux.cpp
 
-USFSMAX.o: $(USRC)/USFSMAX.cpp 
+UFSMAX.o: $(USRC)/USFSMAX.cpp 
 	g++ -std=c++11 -Wall -I$(I2CINC) -I$(USRC) -c $(USRC)/USFSMAX.cpp
 
 USFSMAX_Basic.o: $(USRC)/USFSMAX_Basic.cpp 

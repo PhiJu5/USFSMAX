@@ -32,6 +32,10 @@
 
 #if defined(ARDUINO)
 #include <Arduino.h>
+#elif defined(RASPBERRY_PI)
+extern "C" {
+#include <wiringPi.h>
+}
 #endif
 
 USFSMAX::USFSMAX(

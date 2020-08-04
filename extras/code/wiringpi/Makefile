@@ -30,7 +30,7 @@
 # Change this to whereever you installed CrossPlatformI2C
 CPDB = $(HOME)/Desktop/CrossPlatformDataBus
 
-ALL = main
+ALL = BasicDemo
 
 CPSRC  = $(CPDB)/src
 CPEXT  = $(CPDB)/extras
@@ -41,20 +41,26 @@ USRC   = $(HOME)/Desktop/USFSMAX/src
 
 all: $(ALL)
 
-main: main.o WiringPiI2C.o main.o
-	g++ -std=c++11 -o main main.o WiringPiI2C.o -lwiringPi
+BasicDemo: BasicDemo.o USFSMAX.o USFSMAX_Basic.o WiringPiI2C.o BasicDemo.o
+	g++ -std=c++11 USFSMAX.o USFSMAX_Basic.o WiringPiI2C.o BasicDemo.o -lwiringPi
 
-main.o: main.cpp 
-	g++ -std=c++11 -Wall -I$(CPSRC) -I$(USRC) -c main.cpp
+BasicDemo.o: BasicDemo.cpp 
+	g++ -std=c++11 -Wall -I$(CPSRC) -I$(USRC) -DRASPBERRY_PI -c BasicDemo.cpp
 
 WiringPiI2C.o: $(I2CSRC)/WiringPiI2C.cpp 
 	g++ -std=c++11 -Wall -I$(CPSRC) -c $(I2CSRC)/WiringPiI2C.cpp
 
-run: main
-	./main
+USFSMAX.o: $(USRC)/USFSMAX.cpp 
+	g++ -std=c++11 -Wall -I$(CPSRC) -I$(USRC) -DRASPBERRY_PI -c $(USRC)/USFSMAX.cpp
+
+USFSMAX_Basic.o: $(USRC)/USFSMAX_Basic.cpp 
+	g++ -std=c++11 -Wall -I$(I2CINC) -I$(USRC) -c $(USRC)/USFSMAX_Basic.cpp
+
+run: BasicDemo
+	./BasicDemo
 
 edit:
-	vim main.cpp
+	vim BasicDemo.cpp
 
 clean:
 	rm -f $(ALL) *.o *~

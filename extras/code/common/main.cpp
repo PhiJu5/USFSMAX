@@ -24,11 +24,6 @@
 extern void setup(void);
 extern void loop(void);
 
-void delay(uint32_t msec)
-{
-    usleep(msec*1000);
-}
-
 int main(int argc, char ** argv)
 {
     setup();

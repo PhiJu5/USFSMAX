@@ -27,17 +27,14 @@
  */
 
 #include "USFSMAX_Basic.h"
+#include <stdio.h>
 
-#ifdef __MK20DX256__
-#include <i2c_t3.h>
-#elif defined(ARDUINO)
-#include <Wire.h>
+#if defined(RASPBERRY_PI)
+extern "C" {
+#include <wiringPi.h>
+}
+#else
 #endif
-
-// Un-comment one
-//static uint32_t INTERRUPT_PIN = 23; // Teensy4.0
-static uint32_t INTERRUPT_PIN = 32; // TinyPICO
-//static uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
 
 // Magnetic constants for Kelseyville, CA
 // For your location, use https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
@@ -95,27 +92,24 @@ usfsmax(
 
 static void printVal(float val)
 {
-    Serial.print(val < 0 ? "" : "+");
-    Serial.print(val);
+    printf("%+4.4f", val);
 }
 
 static void printSensor(float vals[3], const char * label, const char * units, uint8_t n=3)
 {
-    Serial.print(label);
-    Serial.print(": ");
+    printf("%s: ", label);
 
     for (uint8_t k=0; k<n; ++k) {
         printVal(vals[k]);
-        Serial.print(" ");
+        printf("%s", " ");
     }
 
-    Serial.print(units);
-    Serial.print(" ");
+    printf("%s ", units);
 }
 
 static void printDelimiter(void)
 {
-    Serial.print(" | ");
+    printf("%s", " | ");
 }
 
 static void printAccGyro()
@@ -150,7 +144,7 @@ static void fetchUsfsmaxData(void)
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
             printAccGyro();
-            Serial.print("\n");
+            printf("%s", "\n");
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
             printAccGyro();
@@ -158,21 +152,21 @@ static void fetchUsfsmaxData(void)
             printMag();
             printDelimiter();
             printBaro();
-            Serial.print("\n");
+            printf("%s", "\n");
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
             printMag();
             printDelimiter();
             printBaro();
-            Serial.print("\n");
+            printf("%s", "\n");
             break;
         case USFSMAX::DATA_READY_MAG:
             printMag();
-            Serial.print("\n");
+            printf("%s", "\n");
             break;
         case USFSMAX::DATA_READY_BARO:
             printBaro();
-            Serial.print("\n");
+            printf("%s", "\n");
             break;
         default:
             break;
@@ -182,55 +176,31 @@ static void fetchUsfsmaxData(void)
         float quat[4] = {};
         usfsmax.readQuat(quat);
         printSensor(quat, "q", "", 4);
-        Serial.print("\n");
+        printf("%s", "\n");
     }
 
 } // fetchUsfsmaxData
 
-// Host DRDY interrupt handler
-static void DRDY_handler()
-{
-    dataReady = true;
-}
 
 static void error(uint8_t status)
 {
     while (true) {
-        Serial.print("Got error ");
-        Serial.print(status);
-        Serial.print("\n");
+        printf("Got error %d\n", status);
         delay(500);
     }
 }
 
 void setup()
 {
-    Serial.begin(115200);
-
-    // Initialize I^2C bus, setting I2C clock speed to 100kHz
-#ifdef __MK20DX256__
-    Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_100);
-#else
-    Wire.begin();
-    delay(100);
-    Wire.setClock(100000); 
-#endif
-    delay(1000);
-
     uint8_t status = usfsmax.begin(); // Start USFSMAX
 
-    Serial.print("Configuring the coprocessor...\n");
+    printf("%s", "Configuring the coprocessor...\n");
 
     if (status) {
         error(status);
     }
 
-    Wire.setClock(I2C_CLOCK);// Set the I2C clock to high speed for run-mode data collection
     delay(100);
-
-    // Attach interrupt (implemented only for Arduino)
-    pinMode(INTERRUPT_PIN, INPUT);
-    attachInterrupt(INTERRUPT_PIN, DRDY_handler, RISING);
 
 } // setup
 
