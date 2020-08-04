@@ -1,7 +1,7 @@
 # 
 # Makefile for USFSMAXMAX i2cdev examples
 #
-# Copyright (C) 2020 Simon D. Levy, Greg Tomasch. All rights reserved.
+# Copyright (C) 2020 Simon D. Levy. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
