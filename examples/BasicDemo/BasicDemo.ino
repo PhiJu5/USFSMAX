@@ -238,7 +238,7 @@ void loop()
 {
     static uint32_t lastRefresh;
 
-    if (dataReady) {
+    if (true /*dataReady*/) {
 
         dataReady = false;
 
