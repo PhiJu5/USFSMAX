@@ -39,11 +39,11 @@
 static uint32_t INTERRUPT_PIN = 32; // TinyPICO
 //static uint32_t INTERRUPT_PIN = 2; // Butterfly STM32L433
 
-// Magnetic constants for Kelseyville, CA
+// Magnetic constants for Lexington, VA, USA
 // For your location, use https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
-static const float MAG_V           = 42.9631f; // angle, degrees
-static const float MAG_H           = 22.7568f; // angle, degrees
-static const float MAG_DECLINATION = 13.7433f; // uT
+static const float MAG_V           = 45.821;  // vertical intensity (uT)
+static const float MAG_H           = 21.521;  // horizontal intensity (uT)
+static const float MAG_DECLINATION = -9.1145; // angle, degrees
 
 // Support for interrupt handler
 static volatile bool dataReady;
