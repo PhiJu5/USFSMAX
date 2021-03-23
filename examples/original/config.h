@@ -35,7 +35,7 @@
 /*************                                                                     ***************/
 /*************************************************************************************************/
     #define MAX32660_SLV_ADDR                  (0x57)               // USFS MAX I2C slave address
-    #define INT_PIN                            27
+    #define INT_PIN                            32
     #define LED_PIN                            13
 
     // Dynamic Hard Iron corrector (Uncomment one only)

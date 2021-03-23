@@ -149,10 +149,12 @@ static void fetchUsfsmaxData(void)
     // Optimize the I2C read function with respect to whatever sensor data is ready
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
+            break;
             printAccGyro();
             Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
+            break;
             printAccGyro();
             printDelimiter();
             printMag();
@@ -161,16 +163,19 @@ static void fetchUsfsmaxData(void)
             Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_MAG_BARO:
+            break;
             printMag();
             printDelimiter();
             printBaro();
             Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_MAG:
+            break;
             printMag();
             Serial.print("\n");
             break;
         case USFSMAX::DATA_READY_BARO:
+            break;
             printBaro();
             Serial.print("\n");
             break;
@@ -181,8 +186,9 @@ static void fetchUsfsmaxData(void)
     if (usfsmax.quaternionReady()) {
         float quat[4] = {};
         usfsmax.readQuat(quat);
-        printSensor(quat, "q", "", 4);
-        Serial.print("\n");
+        reportEulerAngles(quat);
+        //printSensor(quat, "q", "", 4);
+        //Serial.print("\n");
     }
 
 } // fetchUsfsmaxData
@@ -201,6 +207,25 @@ static void error(uint8_t status)
         Serial.print("\n");
         delay(500);
     }
+}
+
+static float rad2deg(float rad)
+{
+    return 180 * rad / M_PI;
+}
+
+static void reportEulerAngles(float q[4])
+{
+    float qw = q[0];
+    float qx = q[1];
+    float qy = q[2];
+    float qz = q[3];
+
+    float ex = rad2deg(atan2(2.0f*(qw*qx+qy*qz),qw*qw-qx*qx-qy*qy+qz*qz));
+    float ey = rad2deg(asin(2.0f*(qx*qz-qw*qy)));
+    float ez = rad2deg(atan2(2.0f*(qx*qy+qw*qz),qw*qw+qx*qx-qy*qy-qz*qz));
+
+    Serial.printf("roll: %+3.3f    pitch: %+3.3f    yaw: %+3.3f\n", ex, ey, ez);
 }
 
 void setup()
@@ -238,7 +263,7 @@ void loop()
 {
     static uint32_t lastRefresh;
 
-    if (true /*dataReady*/) {
+    if (dataReady) {
 
         dataReady = false;
 
