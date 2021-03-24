@@ -1,5 +1,5 @@
 /*
-    Simple demo of USFSMAX quaternion and gyro, no interrupts
+    Simple demo of USFSMAX quaternion => Euler angle
 
     Copyright (C) Simon D. Levy 2021
 
@@ -60,43 +60,6 @@ usfsmax(
         MAG_H,
         MAG_DECLINATION);
 
-static void printVal(float val)
-{
-    Serial.print(val < 0 ? "" : "+");
-    Serial.print(val);
-}
-
-static void printSensor(float vals[3], const char * label, const char * units, uint8_t n=3)
-{
-    Serial.print(label);
-    Serial.print(": ");
-
-    for (uint8_t k=0; k<n; ++k) {
-        printVal(vals[k]);
-        Serial.print(" ");
-    }
-
-    Serial.print(units);
-    Serial.print(" ");
-}
-
-static void printDelimiter(void)
-{
-    Serial.print(" | ");
-}
-
-static void printGyro()
-{
-    float gyro[3] = {};
-    float acc[3] = {};
-
-    usfsmax.readGyroAcc(gyro, acc);
-
-    gyro[0] = -gyro[0];
-
-    printSensor(gyro, "g", "deg/s");
-}
-
 static void error(uint8_t status)
 {
     while (true) {
@@ -105,25 +68,6 @@ static void error(uint8_t status)
         Serial.print("\n");
         delay(500);
     }
-}
-
-static float rad2deg(float rad)
-{
-    return 180 * rad / M_PI;
-}
-
-static void reportEulerAngles(float q[4])
-{
-    float qw = q[0];
-    float qx = q[1];
-    float qy = q[2];
-    float qz = q[3];
-
-    float ex = -rad2deg(atan2(2.0f*(qw*qx+qy*qz),qw*qw-qx*qx-qy*qy+qz*qz));
-    float ey = -rad2deg(asin(2.0f*(qx*qz-qw*qy)));
-    float ez = -rad2deg(atan2(2.0f*(qx*qy+qw*qz),qw*qw+qx*qx-qy*qy-qz*qz));
-
-    Serial.printf("roll: %+3.3f    pitch: %+3.3f    yaw: %+3.3f\n", ex, ey, ez);
 }
 
 void setup()
@@ -151,23 +95,21 @@ void setup()
 
 void loop()
 {
-    // Optimize the I2C read function with respect to whatever sensor data is ready
-    switch (usfsmax.dataReady()) {
-        case USFSMAX::DATA_READY_GYRO_ACC:
-        case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            printGyro();
-            Serial.print("\n");
-        default:
-            break;
-    };
-
     if (usfsmax.quaternionReady()) {
-        float quat[4] = {};
-        usfsmax.readQuat(quat);
-        reportEulerAngles(quat);
-    }
+        float q[4] = {};
+        usfsmax.readQuat(q);
 
+        float qw = q[0];
+        float qx = q[1];
+        float qy = q[2];
+        float qz = q[3];
+
+        float ex = -atan2(2.0f*(qw*qx+qy*qz),qw*qw-qx*qx-qy*qy+qz*qz);
+        float ey = -asin(2.0f*(qx*qz-qw*qy));
+        float ez = -atan2(2.0f*(qx*qy+qw*qz),qw*qw+qx*qx-qy*qy-qz*qz);
+
+        Serial.printf("%3+3.3f\n", ey);
+    }    
 
     delay(5);
-
 } 
