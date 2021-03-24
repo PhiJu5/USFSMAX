@@ -85,16 +85,16 @@ static void printDelimiter(void)
     Serial.print(" | ");
 }
 
-static void printAccGyro()
+static void printGyro()
 {
     float gyro[3] = {};
     float acc[3] = {};
 
     usfsmax.readGyroAcc(gyro, acc);
 
+    gyro[0] = -gyro[0];
+
     printSensor(gyro, "g", "deg/s");
-    printDelimiter();
-    printSensor(acc, "a", "g");
 }
 
 static void error(uint8_t status)
@@ -155,8 +155,8 @@ void loop()
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            //printAccGyro();
-            //Serial.print("\n");
+            printGyro();
+            Serial.print("\n");
         default:
             break;
     };
