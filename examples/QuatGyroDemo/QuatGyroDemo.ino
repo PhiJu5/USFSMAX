@@ -119,9 +119,9 @@ static void reportEulerAngles(float q[4])
     float qy = q[2];
     float qz = q[3];
 
-    float ex = rad2deg(atan2(2.0f*(qw*qx+qy*qz),qw*qw-qx*qx-qy*qy+qz*qz));
-    float ey = rad2deg(asin(2.0f*(qx*qz-qw*qy)));
-    float ez = rad2deg(atan2(2.0f*(qx*qy+qw*qz),qw*qw+qx*qx-qy*qy-qz*qz));
+    float ex = -rad2deg(atan2(2.0f*(qw*qx+qy*qz),qw*qw-qx*qx-qy*qy+qz*qz));
+    float ey = -rad2deg(asin(2.0f*(qx*qz-qw*qy)));
+    float ez = -rad2deg(atan2(2.0f*(qx*qy+qw*qz),qw*qw+qx*qx-qy*qy-qz*qz));
 
     Serial.printf("roll: %+3.3f    pitch: %+3.3f    yaw: %+3.3f\n", ex, ey, ez);
 }
@@ -155,8 +155,8 @@ void loop()
     switch (usfsmax.dataReady()) {
         case USFSMAX::DATA_READY_GYRO_ACC:
         case USFSMAX::DATA_READY_GYRO_ACC_MAG_BARO:
-            printAccGyro();
-            Serial.print("\n");
+            //printAccGyro();
+            //Serial.print("\n");
         default:
             break;
     };
