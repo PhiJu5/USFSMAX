@@ -75,6 +75,11 @@ USFSMAX::DataReady_t USFSMAX_Basic::dataReady(void)
     return _usfsmax.dataReady();
 }
 
+uint8_t USFSMAX_Basic::getDataReadyStatus(void)
+{
+    return _usfsmax.getDataReadyStatus();
+}
+
 bool USFSMAX_Basic::quaternionReady(void)
 {
     return _usfsmax.quaternionReady();

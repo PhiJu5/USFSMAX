@@ -19,7 +19,7 @@ static const float MAG_DECLINATION = -9.1145; // angle, degrees
 static const uint32_t UPDATE_PERIOD  = 100;
 
 // I2C Clock Speed
-static const uint32_t I2C_CLOCK = 1000000;    // 1MHz
+static const uint32_t I2C_CLOCK =  400000L;    // 400kHz
 
 // Output Data Rates (ODRs)
 static const USFSMAX::AccelGyroODR_t ACCEL_ODR = USFSMAX::ACCEL_GYRO_ODR_834;

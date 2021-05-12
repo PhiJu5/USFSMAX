@@ -54,6 +54,8 @@ class USFSMAX_Basic
 
         USFSMAX::DataReady_t dataReady(void);
 
+        uint8_t getDataReadyStatus(void);
+
         bool quaternionReady(void);
 
         void readGyroAcc(float gyro[3], float acc[3]);

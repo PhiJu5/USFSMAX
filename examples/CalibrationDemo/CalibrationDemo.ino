@@ -68,7 +68,7 @@ static bool SERIAL_DEBUG = true;
 static const bool MOTION_CAL_GUI_ENABLED  = false;
 
 // I2C Clock Speed
-static const uint32_t I2C_CLOCK = 1000000;    // 1MHz
+static const uint32_t I2C_CLOCK =  400000L;    // 400kHz
 
 // Dynamic Hard Iron corrector (Uncomment one only)
 static const bool ENABLE_DHI_CORRECTOR  = true;

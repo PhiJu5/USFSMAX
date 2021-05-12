@@ -165,6 +165,8 @@ class USFSMAX
 
         DataReady_t dataReady(void);
 
+        uint8_t getDataReadyStatus(void);
+
         bool quaternionReady(void);
 
         typedef struct
